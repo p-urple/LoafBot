@@ -546,6 +546,7 @@ async def mute(ctx, user : discord.Member, tint :int = None, tdenom :str = None,
 					await user.remove_roles(role)
 					await send_publiclogs(ctx.guild, user.mention + 'is no longer muted.')
 
+
 	else:
 		await ctx.send('Correct usage is: >mute <@person> <time integer> <s/m/h/d> <reason(optional)>')
 	
@@ -585,4 +586,4 @@ async def unmute_error(ctx, error):
 		print(error)
 
 
-bot.run(open('.token','r').read())
+bot.run(token)

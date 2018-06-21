@@ -354,7 +354,7 @@ async def on_mention(ctx):
 	await ctx.send(embed=em)
 
 @bot.command()
-@commands.has_permissions(manage_server=True)
+@commands.has_permissions(manage_messages=True)
 async def muterole(ctx, rolename : discord.Role):
 	c = con.cursor()
 	if rolename == None:
@@ -369,7 +369,7 @@ async def muterole(ctx, rolename : discord.Role):
 	con.commit()
 
 @bot.command()
-@commands.has_permissions(manage_server=True)
+@commands.has_permissions(manage_messages=True)
 async def modlog(ctx, channel : discord.TextChannel):
 	c = con.cursor()
 
@@ -384,7 +384,7 @@ async def modlog(ctx, channel : discord.TextChannel):
 	con.commit()
 
 @bot.command()
-@commands.has_permissions(manage_server=True)
+@commands.has_permissions(manage_messages=True)
 async def publiclog(ctx, channel : discord.TextChannel):
 	c = con.cursor()
 
@@ -399,7 +399,7 @@ async def publiclog(ctx, channel : discord.TextChannel):
 	con.commit()
 
 @bot.command()
-@commands.has_permissions(manage_server=True)
+@commands.has_permissions(manage_messages=True)
 async def starboard(ctx, channel : discord.TextChannel):
 	c = con.cursor()
 	if channel == None:
@@ -586,4 +586,4 @@ async def unmute_error(ctx, error):
 		print(error)
 
 
-bot.run(open('.token','r').read())
+bot.run(open('token.txt','r').read())

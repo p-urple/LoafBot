@@ -302,7 +302,6 @@ async def help(ctx):
 	`>mock <message>`: sends a fun message with letters randomly turned uppercase and lowercase
 	
 	**UTILITY COMMANDS:**
-	`>setup`: the command used to configure the bot. Use the command for more information.
 	`>roles [user]`: sends the list of roles for the server, or for the specified user, along with their IDs \n
 	`>support`: sends an invite to the support server
 	`>invite`: sends the OAuth2 URL used for adding the bot to a server
@@ -334,7 +333,6 @@ async def on_mention(ctx):
 	`>mock <message>`: sends a fun message with letters randomly turned uppercase and lowercase
 	
 	**UTILITY COMMANDS:**
-	`>setup`: the command used to configure the bot. Use the command for more information.
 	`>roles [user]`: sends the list of roles for the server, or for the specified user, along with their IDs \n
 	`>support`: sends an invite to the support server
 	`>invite`: sends the OAuth2 URL used for adding the bot to a server

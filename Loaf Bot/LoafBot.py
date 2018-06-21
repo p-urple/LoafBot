@@ -433,7 +433,7 @@ async def roles(ctx, user : discord.Member = None):
 		title = 'Roles in **'
 		title += ctx.guild.name
 		title += '**:'
-		   
+
 		rolelist += '\n **'
 		rolelist += str(counter)
 		rolelist += ' roles**'

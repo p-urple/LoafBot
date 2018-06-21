@@ -258,7 +258,7 @@ async def on_message_delete(message):
 @bot.event
 async def on_message_edit(message, after):
 	c = con.cursor()
-	if message.author.bot is True or message == after:
+	if message.author.bot is True or message.content == after.content:
 		return
 	else:
 		channel = message.channel.name

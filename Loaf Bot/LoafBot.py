@@ -6,7 +6,7 @@ from discord.ext import commands
 
 bot = commands.Bot(command_prefix= '>')
 con = sqlite3.connect('discord.db')
-c = con.cursor()
+con.row_factory = sqlite3.Row
 
 bot.remove_command('help')
 
@@ -34,55 +34,93 @@ async def on_ready():
 @bot.event
 async def on_guild_join(guild):
 	sid = str(guild.id)
+	c = con.cursor()
 	try:
-		c.execute('SELECT * FROM guilds WHERE symbol=(?)', (sid,))
+		c.execute('SELECT * FROM guilds WHERE guildid=(?)', (sid,))
 	except:
-		id = None
+		guildinfo = (sid, None, None, None, None)
 		try:
-			guildinfo = [(sid, 'public logs', id), (sid, 'mod logs', id), (sid, 'starboard', id), (sid, 'mutedrole', id)]
-			c.executemany('INSERT INTO guilds VALUES (?, ?, ?)', guildinfo)
+			c.execute('INSERT INTO guilds VALUES (?, ?, ?, ?, ?)', guildinfo)
 		except:
 			c.execute('''CREATE TABLE guilds
-						 (guildid, type, id)''')
-			guildinfo = [(sid, 'public logs', id), (sid, 'mod logs', id), (sid, 'starboard', id), (sid, 'mutedrole', id)]
-			c.executemany('INSERT INTO guilds VALUES (?, ?, ?)', guildinfo)
+						 (guildid integer, publiclogs integer, modlogs integer, starboard integer, muterole integer)''')
+			c.execute('INSERT INTO guilds VALUES (?, ?, ?, ?, ?)', guildinfo)
 	con.commit()
 
-	guild.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features.  Use `>help` to get started.')
+	guild.system_channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features.	 Use `>help` to get started.')
 
+async def send_modlogs(guild, *args, **kwargs):
+	c = con.cursor()
+	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
+	row = c.fetchone()
+	if row['modlogs'] is not None:
+		await bot.get_channel(row['modlogs']).send(*args, **kwargs)
+
+async def send_publiclogs(guild, *args, **kwargs):
+	c = con.cursor()
+	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
+	row = c.fetchone()
+	if row['modlogs'] is not None:
+		await bot.get_channel(row['modlogs']).send(*args, **kwargs)
+	if row['publiclogs'] is not None:
+		await bot.get_channel(row['publiclogs']).send(*args, **kwargs)
+
+async def send_starboard(guild, *args, **kwargs):
+	c = con.cursor()
+	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
+	row = c.fetchone()
+	if row['starboard'] is not None:
+		await bot.get_channel(row['starboard']).send(*args, **kwargs)
+
+def get_muterole(guild):
+	c = con.cursor()
+	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
+	row = c.fetchone()
+	return discord.utils.get(guild.roles, id=row['muterole'])
+
+def get_field(guild, field):
+	c = con.cursor()
+	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
+	row = c.fetchone()
+	return row[field]
+
+		
+	
 @bot.event
 async def on_member_join(member):
 	uid = member.id
 	gid = member.guild.id
+	c = con.cursor()
 	if member.bot == True:
 		return
-	try:
-		for i in c.execute('SELECT * FROM users WHERE id=(?)', (uid,)):
-			if i[1] == gid:
-				addsuccess = []
-				addfail = []
-				for r in i[2]:
-					role = discord.utils.get(ctx.guild.roles, id=r)
-					try:
-						member.add_roles(role)
-						addsuccess += role.name
-					except:
-						addfail += role.name
-				user = discord.utils.get(user, id=uid)
-				await user.edit(nick(i[3]))
-				message = '**Succsessfully Restored:** \n'
-				for i in addsuccsess:
-					message += i
-					message += '\n'
-				message += '\n'
-				message += '**Unsuccsessfully Restored:** \n'
-				for i in addfail:
-					message += i
-					message += '\n'
-				em2 = discord.Embed(title=None, description=message, color=0x23272a)
-				em2.set_author(name=member.display_name, icon_url=member.avatar_url)
-				c.execute('DELETE FROM users WHERE symbol=? AND symbol=?', uid, gid)
 
+	em2 = discord.Embed(title=None, description='', color=0x23272a) #hacky but ok
+	try:												   
+		for i in c.execute('SELECT * FROM users WHERE uid=(?) AND gid=?', (uid, gid)):				     
+			addsuccess = []								      
+			addfail = []								      
+			
+			role = discord.utils.get(ctx.guild.roles, id=i[2])			 
+			try:								      
+				member.add_roles(role)
+				addsuccess.append(role.name)
+			except:
+				addfail.append(role.name)				      
+			user = discord.utils.get(user, id=uid)					      
+			message = '**Successfully Restored:** \n'
+			for i in addsuccess:
+				message += i + '\n'
+
+			message += '\n'
+			message += '**Unsuccessfully Restored:** \n'
+			for i in addfail:
+				message += i + '\n'
+			em2 = discord.Embed(title=None, description=message, color=0x23272a)
+			em2.set_author(name=member.display_name, icon_url=member.avatar_url)
+			c.execute('DELETE FROM users WHERE uid=? AND gid=?', (uid, gid))
+	except:
+		pass
+	
 	mc = 0
 	for x in member.guild.members:
 		if x.bot == False:
@@ -104,7 +142,7 @@ async def on_member_join(member):
 	em = discord.Embed(title=emt, description=des, colour=0x51cc72)
 	em.set_author(name=member.display_name, icon_url=member.avatar_url)
 
-	i = c.execute("SELECT * FROM guilds WHERE symbol=(?)", (ctx.guild.id,))
+	i = c.execute("SELECT * FROM guilds WHERE guildid=(?)", (ctx.guild.id,))
 	modlog = i[1]
 
 	modlogchannel = bot.get_channel(modlog)
@@ -115,18 +153,17 @@ async def on_member_join(member):
 
 @bot.event
 async def on_member_remove(member):
+	c = con.cursor()
 	uid = member.id
 	gid = member.guild.id
-	roles = []
-	for i in member.roles:
-		roles += i.id
-	nick = member.display_name
+	roles = [role for role in member.roles] #needed?
+	many = [(uid, gid, role) for role in roles]
 	try:
-		c.execute("INSERT INTO users VALUES (uid, gid, roles, nick)")
+		c.executemany("INSERT INTO users VALUES (uid, gid, roles)", many)
 	except:
 		c.execute('''CREATE TABLE users
-		(userid, guildid, roleids, nickname)''')
-		c.execute("INSERT INTO users VALUES (uid, gid, roles, nick)")
+		(uid, gid, role)''')
+		c.executemany("INSERT INTO users VALUES (uid, gid, roles)", many)
 
 	if member.bot == True:
 		return
@@ -151,27 +188,18 @@ async def on_member_remove(member):
 	
 	em = discord.Embed(title=emt, description=des, colour=0xe74c3c)
 	em.set_author(name=member.display_name, icon_url=member.avatar_url)
-
-	for i in c.execute("SELECT * FROM guilds WHERE id=(?)", (ctx.guild.id,)):
-		if i[1] == 'mod logs':
-			modlog = i[2]
-
-	modlogchannel = bot.get_channel(modlog)
-	await modlogchannel.send(embed = em)
+	await send_modlogs(member.guild, embed = em)
 	con.commit()
 
 @bot.event
 async def on_raw_reaction_add(reaction, messageid, channelid, member):
+	c = con.cursor()
 	reactchannel = bot.get_channel(channelid)
 	message = await reactchannel.get_message(messageid)
-	if member == bot.user.id:
+	if member == bot.user.id or message.author.bot == True:
 		return
-	if message.author.bot == True:
-		return
-	bestofc = bot.get_channel(bestof)
-	worstofc = bot.get_channel(worstof)
 	if reaction.count is 7 and reaction.name == '⭐':
-		if str(messageid) in open('bestof.txt').read():
+		if str(messageid) in open('bestof.txt').readlines():
 			pass
 		else:
 			print('bestof')
@@ -190,22 +218,18 @@ async def on_raw_reaction_add(reaction, messageid, channelid, member):
 			except:
 				pass
 
-			for i in c.execute("SELECT * FROM guilds WHERE id=(?)", (ctx.guild.id,)):
-				if i[1] == 'starboard':
-					bestofc = i[2]
-
-			await bestofc.send(embed = em)
-			cache = open("bestof.txt", "a+",encoding="utf8") #???
-			cache.write(str(messageid) + " ")
+			await send_starboard(message.guild, embed = em)
+			cache = open("bestof.txt", "a+",encoding="utf8") 
+			cache.write(str(messageid) + '\n')
 			cache.close()
 			con.commit()
 		   
 
 @bot.event
 async def on_message_delete(message):
+	c = con.cursor()
 	if message.author.bot is True:
 		return
-	modlogchannel = bot.get_channel(modlog)
 	channel = message.channel.name
 
 	mc = 'Deleted Message in #'
@@ -224,23 +248,19 @@ async def on_message_delete(message):
 		em.set_image(url = attach[0].url)
 	except:
 		pass
-	for i in c.execute("SELECT * FROM guilds WHERE symbol=?", (ctx.guild.id,)):
-		if i[1] == 'mod logs':
-			modlog = i[2]
 
-	modlogchannel = bot.get_channel(modlog)
-	await modlogchannel.send(embed = em)
+	await send_modlogs(message.guild, embed = em)
+
 	con.commit()
-	con.close()
+
 
 
 @bot.event
 async def on_message_edit(message, after):
+	c = con.cursor()
 	if message.author.bot is True or message == after:
 		return
 	else:
-		con = sqlite3.connect('discord.db')
-		c = con.cursor()
 		channel = message.channel.name
 
 		mc = 'Edited Message in #'
@@ -266,14 +286,8 @@ async def on_message_edit(message, after):
 		except:
 			pass
 
-		for i in c.execute("SELECT * FROM guilds WHERE symbol=?", (ctx.guild.id,)):
-			if i[1] == 'mod logs':
-				modlog = i[2]
-
-		modlogchannel = bot.get_channel(modlog)
-		await modlogchannel.send(embed = em)
+		await send_modlogs(message.guild, embed = em)
 		con.commit()
-		con.close()
 
 
 @bot.command(pass_context=True)
@@ -303,14 +317,14 @@ async def help(ctx):
 	`>publiclog <channel>`: used to assign an optional second log that shows only mutes for regular users to view
 	`>starboard <channel>`: used to assign the starboard to a channel
 	
-	*<> = necessary          [] = optional*""" #refactor out into *actual framework-provided help function*
+	*<> = necessary		 [] = optional*""" #refactor out into *actual framework-provided help function*
 
 	em = discord.Embed(title=helpt, description=helpm, colour=0x9b59b6)
 	em.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
 
 	await ctx.send(embed=em)
 
-@bot.event()
+@bot.event
 async def on_mention(ctx):
 	b = bot.user.display_name
 	helpt = "Commands for {}:\n\n".format(b)
@@ -335,7 +349,7 @@ async def on_mention(ctx):
 	`>publiclog <channel>`: used to assign an optional second log that shows only mutes for regular users to view
 	`>starboard <channel>`: used to assign the starboard to a channel
 	
-	*<> = necessary          [] = optional*"""
+	*<> = necessary		 [] = optional*"""
 
 	em = discord.Embed(title=helpt, description=helpm, colour=0x9b59b6)
 	em.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
@@ -344,44 +358,58 @@ async def on_mention(ctx):
 
 @bot.command()
 async def muterole(ctx, rolename : discord.Role):
+	c = con.cursor()
 	if rolename == None:
 		await ctx.send('Please provide a role. Remember to put the role in quotes and make sure it is the exact name. ("Role name")')
 	else:
 		try:
-			role = discord.utils.get(ctx.guild.roles, name=rolename)
-			c.execute("UPDATE guilds SET id=(?) WHERE guildid=(?) AND type='mutedrole'", (role.id, ctx.guild.id))
-		except:
+			c.execute("UPDATE guilds SET muterole=(?) WHERE guildid=(?)", (rolename.id, ctx.guild.id))
+			await ctx.send('Mute role set.')
+		except Exception as e:
+			print(e)
 			await ctx.send('The provided role could not be found. Please put the role name in quotes, and make sure the name is *exact*. Remember that the bot is case sensitive. ("Role name")')
+	con.commit()
 
 @bot.command()
 async def modlog(ctx, channel : discord.TextChannel):
+	c = con.cursor()
+
 	if channel == None:
 		await ctx.send('Please provide a channel')
 	else:
 		try:
-			c.execute("UPDATE guilds SET id=(?) WHERE guildid=(?) AND type='mod logs'", (channel.id, ctx.guild.id))
-		except:
+			c.execute("UPDATE guilds SET modlogs=(?) WHERE guildid=(?)", (channel.id, ctx.guild.id))
+			await ctx.send("Mod log channel set.")
+		except Exception as e:
 			await ctx.send('The provided channel could not be found.') #unneeded? caught by converter
+	con.commit()
 
 @bot.command()
 async def publiclog(ctx, channel : discord.TextChannel):
+	c = con.cursor()
+
 	if channel == None:
 		await ctx.send('Please provide a channel')
 	else:
 		try:
-			c.execute("UPDATE guilds SET id=(?) WHERE guildid=(?) AND type='public logs'", (channel.id, ctx.guild.id))
+			c.execute("UPDATE guilds SET publiclogs=(?) WHERE guildid=(?)", (channel.id, ctx.guild.id))
+			await ctx.send("Public log channel set.")
 		except:
 			await ctx.send('The provided channel could not be found.')
+	con.commit()
 
 @bot.command()
 async def starboard(ctx, channel : discord.TextChannel):
+	c = con.cursor()
 	if channel == None:
 		await ctx.send('Please provide a channel')
 	else:
 		try:
-			c.execute("UPDATE guilds SET id=(?) WHERE guildid=(?) AND type='starboard'", (channel.id, ctx.guild.id))
+			c.execute("UPDATE guilds SET starboard=(?) WHERE guildid=(?)", (channel.id, ctx.guild.id))
+			await ctx.send("Starboard channel set.")
 		except:
 			await ctx.send('The provided channel could not be found.')
+	con.commit()
 
 @bot.command()
 async def support(ctx):
@@ -425,7 +453,7 @@ async def roles(ctx, user : discord.Member = None):
 		counter = 0
 		for role in ctx.guild.roles:
 			rolelist += str(role.id)
-			rolelist += '   ---   '
+			rolelist += '	---   '
 			rolelist += role.name
 			rolelist += '\n'
 			counter += 1
@@ -452,7 +480,7 @@ async def roles(ctx, user : discord.Member = None):
 		counter = 0
 		for role in user.roles:
 			rolelist += str(role.id)
-			rolelist += '   ---   '
+			rolelist += '	---   '
 			rolelist += role.name
 			rolelist += '\n'
 			counter += 1
@@ -469,6 +497,7 @@ async def roles(ctx, user : discord.Member = None):
 @bot.command(pass_context=True)
 @commands.has_permissions(manage_messages=True)
 async def mute(ctx, user : discord.Member, tint :int = None, tdenom :str = None, *, reason : str = None):
+	c = con.cursor()
 	if tdenom in ['s', 'm', 'h', 'd']:
 		if user is ' ':
 			await ctx.send('Correct usage is: >mute <@person> <time integer> <s/m/h/d> <reason (optional)>')
@@ -477,10 +506,7 @@ async def mute(ctx, user : discord.Member, tint :int = None, tdenom :str = None,
 		elif tdenom is ' ':
 			await ctx.send('Correct usage is: >mute <@person> <time integer> <s/m/h/d> <reason (optional)>')
 		else:
-			for i in c.execute("SELECT * FROM guilds WHERE name=(?)", ('mutedrole',)):
-				if i[0] == ctx.guild.id:
-					mutedid = i[2]
-			role = discord.utils.get(ctx.guild.roles, id=muteid)
+			role = get_muterole(ctx.guild)
 			if role in user.roles:
 				umention = user.mention
 				already = umention
@@ -503,17 +529,9 @@ async def mute(ctx, user : discord.Member, tint :int = None, tdenom :str = None,
 					muted += reason
 					muted += '`)'
 
-				for i in c.execute("SELECT * FROM guilds WHERE symbol=(?)", (ctx.guild.id,)):
-					if i[1] == 'mod logs':
-						modlog = i[2]
-					if i[1] == 'public logs':
-						report = i[2]
 
-				modlogchannel = bot.get_channel(modlog)
-				mchannel = bot.get_channel(report)
-				await modlogchannel.send(muted)
 				await ctx.send(muted)
-				await mchannel.send(muted)
+				await send_publiclogs(ctx.guild, muted)
 				if tdenom is 's':
 					time = 1
 				elif tdenom is 'm':
@@ -526,8 +544,8 @@ async def mute(ctx, user : discord.Member, tint :int = None, tdenom :str = None,
 				await asyncio.sleep(t)
 				if role in user.roles:
 					await user.remove_roles(role)
-					await modlogchannel.send('{umention} is no longer muted')
-					await mchannel.send('{umention} is no longer muted')
+					await send_publiclogs(ctx.guild, user.mention + 'is no longer muted.')
+
 
 	else:
 		await ctx.send('Correct usage is: >mute <@person> <time integer> <s/m/h/d> <reason(optional)>')
@@ -545,10 +563,7 @@ async def mute_error(ctx, error):
 @bot.command()
 @commands.has_permissions(manage_messages=True)
 async def unmute(ctx, user: discord.Member):
-	for i in c.execute("SELECT * FROM guilds WHERE name=(?)", ('mutedrole',)):
-		if i[0] == ctx.guild.id:
-			mutedid = i[2]
-	role = discord.utils.get(ctx.guild.roles, id=muteid)
+	role = get_muterole(guild)
 	umention = user.mention
 	if role in user.roles:
 		await user.remove_roles(role)
@@ -571,4 +586,4 @@ async def unmute_error(ctx, error):
 		print(error)
 
 
-bot.run("<bot token>")
+bot.run(token)

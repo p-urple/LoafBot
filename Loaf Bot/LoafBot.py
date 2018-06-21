@@ -298,7 +298,6 @@ async def help(ctx):
 	`>mock <message>`: sends a fun message with letters randomly turned uppercase and lowercase
 	
 	**UTILITY COMMANDS:**
-	`>setup`: the command used to configure the bot. Use the command for more information.
 	`>roles [user]`: sends the list of roles for the server, or for the specified user, along with their IDs \n
 	`>support`: sends an invite to the support server
 	`>invite`: sends the OAuth2 URL used for adding the bot to a server
@@ -330,7 +329,6 @@ async def on_mention(ctx):
 	`>mock <message>`: sends a fun message with letters randomly turned uppercase and lowercase
 	
 	**UTILITY COMMANDS:**
-	`>setup`: the command used to configure the bot. Use the command for more information.
 	`>roles [user]`: sends the list of roles for the server, or for the specified user, along with their IDs \n
 	`>support`: sends an invite to the support server
 	`>invite`: sends the OAuth2 URL used for adding the bot to a server
@@ -544,7 +542,7 @@ async def mute(ctx, user : discord.Member, tint :int = None, tdenom :str = None,
 				await asyncio.sleep(t)
 				if role in user.roles:
 					await user.remove_roles(role)
-					await send_publiclogs(ctx.guild, user.mention + 'is no longer muted.')
+					await send_publiclogs(ctx.guild, user.mention + ' is no longer muted.')
 
 
 	else:
@@ -567,9 +565,8 @@ async def unmute(ctx, user: discord.Member):
 	umention = user.mention
 	if role in user.roles:
 		await user.remove_roles(role)
-		m = umention
-		m += ' is no longer muted'
-		await ctx.send(m)
+		await ctx.send(umention + ' is no longer muted.')
+		await send_publiclogs(ctx.guild, user.mention + ' is no longer muted.')
 	else:
 		m = umention
 		m += ' is not muted'

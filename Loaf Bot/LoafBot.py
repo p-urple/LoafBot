@@ -94,7 +94,6 @@ async def on_member_join(member):
 	if member.bot == True:
 		return
 
-	em2 = discord.Embed(title=None, description='', color=0x23272a) #hacky but ok
 	try:												   
 		for i in c.execute('SELECT * FROM users WHERE uid=(?) AND gid=?', (uid, gid)):				     
 			addsuccess = []								      
@@ -102,6 +101,8 @@ async def on_member_join(member):
 			
 			role = discord.utils.get(ctx.guild.roles, id=i[2])			 
 			try:								      
+				if role.id == 430437006787608577:
+					pass
 				member.add_roles(role)
 				addsuccess.append(role.name)
 			except:
@@ -118,8 +119,9 @@ async def on_member_join(member):
 			em2 = discord.Embed(title=None, description=message, color=0x23272a)
 			em2.set_author(name=member.display_name, icon_url=member.avatar_url)
 			c.execute('DELETE FROM users WHERE uid=? AND gid=?', (uid, gid))
+		returning = True
 	except:
-		pass
+		returning = False
 	
 	mc = 0
 	for x in member.guild.members:
@@ -143,7 +145,8 @@ async def on_member_join(member):
 	em.set_author(name=member.display_name, icon_url=member.avatar_url)
 
 	await send_modlogs(member.guild, embed = em)
-	await send_modlogs(member.guild, embed = em2)
+	if returning:
+		await send_modlogs(member.guild, embed = em2)
 	
 	con.commit()
 

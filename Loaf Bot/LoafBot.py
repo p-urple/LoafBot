@@ -142,12 +142,8 @@ async def on_member_join(member):
 	em = discord.Embed(title=emt, description=des, colour=0x51cc72)
 	em.set_author(name=member.display_name, icon_url=member.avatar_url)
 
-	i = c.execute("SELECT * FROM guilds WHERE guildid=(?)", (ctx.guild.id,))
-	modlog = i[1]
-
-	modlogchannel = bot.get_channel(modlog)
-	await modlogchannel.send(embed = em)
-	await modlogchannel.send(embed = em2)
+        await send_modlogs(embed = em)
+	await send_modlogs(embed = em2)
 	
 	con.commit()
 
@@ -567,7 +563,7 @@ async def mute_error(ctx, error):
 @bot.command()
 @commands.has_permissions(manage_messages=True)
 async def unmute(ctx, user: discord.Member):
-	role = get_muterole(guild)
+	role = get_muterole(ctx.guild)
 	umention = user.mention
 	if role in user.roles:
 		await user.remove_roles(role)

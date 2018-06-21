@@ -161,7 +161,7 @@ async def on_member_remove(member):
 		c.executemany("INSERT INTO users VALUES (uid, gid, roles)", many)
 	except:
 		c.execute('''CREATE TABLE users
-		(uid, gid, role)''')
+		(uid integer, gid integer, role integer)''')
 		c.executemany("INSERT INTO users VALUES (uid, gid, roles)", many)
 
 	if member.bot == True:

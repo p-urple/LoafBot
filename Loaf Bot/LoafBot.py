@@ -569,9 +569,8 @@ async def unmute(ctx, user: discord.Member):
 	umention = user.mention
 	if role in user.roles:
 		await user.remove_roles(role)
-		m = umention
-		m += ' is no longer muted'
-		await ctx.send(m)
+		await ctx.send(umention + ' is no longer muted.')
+		await send_publiclogs(ctx.guild, user.mention + ' is no longer muted.')
 	else:
 		m = umention
 		m += ' is not muted'

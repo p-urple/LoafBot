@@ -321,37 +321,6 @@ async def help(ctx):
 
 	await ctx.send(embed=em)
 
-@bot.event
-async def on_mention(ctx):
-	b = bot.user.display_name
-	helpt = "Commands for {}:\n\n".format(b)
-
-	helpm = """**FUN COMMANDS:**
-	`>clap <message>`: sends a fun message with clap emojis
-	`>mock <message>`: sends a fun message with letters randomly turned uppercase and lowercase
-	
-	**UTILITY COMMANDS:**
-	`>roles [user]`: sends the list of roles for the server, or for the specified user, along with their IDs \n
-	`>support`: sends an invite to the support server
-	`>invite`: sends the OAuth2 URL used for adding the bot to a server
-	
-	**MODERATION ONLY:**
-	`>mute <user> <s/m/h/d> [reason]`: mutes the user for the specified amount of time
-	`>unmute <user>`: unmutes the specified muted user
-	
-	**CONFIGURATION COMMANDS:**
-	`>muterole <role name>`: used to assign the role given to muted members -- *remember to us the exact role name in quotes. ("Role Name")*
-	`>modlog <channel>`: used to assign the mod log to a channel
-	`>publiclog <channel>`: used to assign an optional second log that shows only mutes for regular users to view
-	`>starboard <channel>`: used to assign the starboard to a channel
-	
-	*<> = necessary		 [] = optional*"""
-
-	em = discord.Embed(title=helpt, description=helpm, colour=0x9b59b6)
-	em.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
-
-	await ctx.send(embed=em)
-
 @bot.command()
 
 @commands.has_permissions(manage_channels=True)

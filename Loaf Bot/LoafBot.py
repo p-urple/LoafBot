@@ -586,4 +586,4 @@ async def unmute_error(ctx, error):
 		print(error)
 
 
-bot.run(token)
+bot.run(open('.token','r').read())

@@ -548,7 +548,7 @@ async def mute(ctx, user : discord.Member, tint :int = None, tdenom :str = None,
 				await asyncio.sleep(t)
 				if role in user.roles:
 					await user.remove_roles(role)
-					await send_publiclogs(ctx.guild, user.mention + 'is no longer muted.')
+					await send_publiclogs(ctx.guild, user.mention + ' is no longer muted.')
 
 
 	else:

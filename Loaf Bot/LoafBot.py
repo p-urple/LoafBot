@@ -567,7 +567,7 @@ async def mute_error(ctx, error):
 @bot.command()
 @commands.has_permissions(manage_messages=True)
 async def unmute(ctx, user: discord.Member):
-	role = get_muterole(guild)
+	role = get_muterole(ctx.guild)
 	umention = user.mention
 	if role in user.roles:
 		await user.remove_roles(role)

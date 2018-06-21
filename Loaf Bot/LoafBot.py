@@ -94,12 +94,14 @@ async def on_member_join(member):
 	if member.bot == True:
 		return
 
+	em2 = discord.Embed(title=None, description="", color=0x23272a)
+
 	try:												   
 		for i in c.execute('SELECT * FROM users WHERE uid=(?) AND gid=?', (uid, gid)):				     
 			addsuccess = []								      
 			addfail = []								      
 			
-			role = discord.utils.get(ctx.guild.roles, id=i[2])			 
+			role = discord.utils.get(member.guild.roles, id=i[2])			 
 			try:								      
 				if role.id == 430437006787608577:
 					pass
@@ -107,7 +109,6 @@ async def on_member_join(member):
 				addsuccess.append(role.name)
 			except:
 				addfail.append(role.name)				      
-			user = discord.utils.get(user, id=uid)					      
 			message = '**Successfully Restored:** \n'
 			for i in addsuccess:
 				message += i + '\n'
@@ -155,7 +156,7 @@ async def on_member_remove(member):
 	c = con.cursor()
 	uid = member.id
 	gid = member.guild.id
-	roles = [role for role in member.roles] #needed?
+	roles = [role.id for role in member.roles] #needed?
 	many = [(uid, gid, role) for role in roles]
 	try:
 		c.executemany("INSERT INTO users VALUES (?, ?, ?)", many)
@@ -576,20 +577,16 @@ async def unmute(ctx, user: discord.Member):
 		m += ' is not muted'
 		await ctx.send(m)
 
-@unmute.error
-async def unmute_error(ctx, error):
+
+
+@bot.event
+async def on_command_error(ctx,error):
 	if isinstance(error, commands.errors.MissingPermissions):
 		await ctx.send(':x: You do not have permission to use this command!')
 	elif isinstance(error, discord.Forbidden):
 		await ctx.send(':x: Error 403: You are forbidden from using that command!')
-	else:
-		await ctx.send(error)
-		print(error)
-
-@bot.event
-async def on_command_error(ctx,error):
-        await ctx.send(error)
-        print(error)
+	await ctx.send(error)
+	print(error)
 
 
 bot.run(open('token.txt','r').read())

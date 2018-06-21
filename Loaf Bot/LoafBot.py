@@ -157,14 +157,12 @@ async def on_member_remove(member):
 	gid = member.guild.id
 	roles = [role for role in member.roles] #needed?
 	many = [(uid, gid, role) for role in roles]
-	if roles != []:
-		try:
-			c.executemany("INSERT INTO users VALUES (uid, gid, roles)", many)
-		except:
-			c.execute('''CREATE TABLE users
-			(uid, gid, role)''')
-			c.executemany("INSERT INTO users VALUES (uid, gid, roles)", many)
-
+	try:
+		c.executemany("INSERT INTO users VALUES (uid, gid, roles)", many)
+	except:
+		c.execute('''CREATE TABLE users
+		(uid integer, gid integer, role integer)''')
+		c.executemany("INSERT INTO users VALUES (uid, gid, roles)", many)
 	if member.bot == True:
 		return
 

@@ -354,6 +354,7 @@ async def on_mention(ctx):
 	await ctx.send(embed=em)
 
 @bot.command()
+
 @commands.has_permissions(manage_channels=True)
 async def muterole(ctx, rolename : discord.Role):
 	c = con.cursor()
@@ -591,4 +592,4 @@ async def on_command_error(ctx,error):
         print(error)
 
 
-bot.run(open('.token','r').read())
+bot.run(open('token.txt','r').read())

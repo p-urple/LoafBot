@@ -421,15 +421,6 @@ async def mute(ctx, user : discord.Member, tint :int = None, tdenom :str = None,
 	else:
 		await ctx.send('Correct usage is: >mute <@person> <time integer> <s/m/h/d> <reason(optional)>')
 	
-@mute.error
-async def mute_error(ctx, error):
-	if isinstance(error, commands.errors.MissingPermissions):
-		await ctx.send(':x: You do not have permission to use this command')
-	elif isinstance(error, discord.Forbidden):
-		await ctx.send(':x: Error 403: You are forbidden from using that command. Please visit the support server for more information.')
-	else:
-		await ctx.send(str(error))
-		print(error)
 		
 @bot.command()
 @commands.has_permissions(manage_messages=True)

@@ -6,6 +6,30 @@ class Moderation:
         def __init__(self, bot):
             self.bot = bot
 
+		@commands.command()
+		@commands.has_permission(kick_members=True)
+		async def kick(self, ctx, user : discord.Member, *, reason):
+			"""kicks the user"""
+			await Client.kick(user)
+
+			title = ctx.message.author.display_name + ' kicked ' + user.display_name
+			message = user.mention + '\n**' + user.id + '**'
+
+			em = discord.Embed(title=title, description=message, colour=0x0012d8)
+			em.set_author(name=user.display_name, icon_url=user.avatar_url)
+
+		@commands.command()
+		@commands.has_permission(ban_members=True)
+		async def ban(self, ctx, user : discord.Member, *, reason):
+			"""bans the user"""
+			await Client.ban(user)
+	
+			title = ctx.message.author.display_name + ' banned ' + user.display_name
+			message = user.mention + '\n**+ user.id' + '**'
+
+			em = discord.Embed(title=title, description=message, colour=0x00086b)
+			em.set_author(name=user.display_name, icon_url=user.avatar_url)
+
         @commands.command(pass_context=True)
         @commands.has_permissions(manage_messages=True)
         async def mute(self, ctx, user : discord.Member, time : int, denomination : str, *, reason : str = None):
@@ -42,7 +66,7 @@ class Moderation:
                     await asyncio.sleep(t)
                     if role in user.roles:
                         await user.remove_roles(role)
-                        await send_publiclogs(self.bot, ctx.guild, user.mention + ' is no longer muted.')
+                        await send_publiclogs(self.bot, ctx.guild, None, user.mention + ' is no longer muted.')
 
 
             else:
@@ -57,7 +81,7 @@ class Moderation:
             if role in user.roles:
                 await user.remove_roles(role)
                 await ctx.send(umention + ' is no longer muted.')
-                await send_publiclogs(self.bot, ctx.guild, user.mention + ' is no longer muted.')
+                await send_publiclogs(self.bot, ctx.guild, None, user.mention + ' is no longer muted.')
             else:
                 await ctx.send(umention + ' is not muted.')
 

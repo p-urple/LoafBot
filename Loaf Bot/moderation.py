@@ -10,7 +10,7 @@ class Moderation:
         @commands.has_permissions(manage_messages=True)
         async def mute(self, ctx, user : discord.Member, time : int, denomination : str, *, reason : str = None):
             """mutes the user for the specified amount of time"""
-            if tdenom in ['s', 'm', 'h', 'd']:
+            if denomination in ['s', 'm', 'h', 'd']:
                 role = get_muterole(ctx.guild)
                 if role in user.roles:
                     umention = user.mention

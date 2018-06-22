@@ -20,7 +20,7 @@ async def send_publiclogs(bot, guild, embed_content, *args, **kwargs):
 	if row['modlogs'] is not None:
 		await bot.get_channel(row['modlogs']).send(*args, **kwargs, embed=embed_content)
 	if row['publiclogs'] is not None:
-		await bot.get_channel(row['publiclogs']).send(*args, **kwargs)
+		await bot.get_channel(row['publiclogs']).send(*args, **kwargs, embed=embed_content)
 
 async def send_starboard(bot, guild, *args, **kwargs):
 	c = con.cursor()

@@ -10,6 +10,8 @@ class Moderation:
 		@commands.has_permissions(kick_members=True)
 		async def kick(self, ctx, user : discord.Member, *, reason : str = None):
 			"""kicks the user"""
+			if user.bot:
+				return
 			await user.kick()
 
 			title = ctx.message.author.display_name + ' kicked ' + user.display_name + ' (`' + str(user.id) + '`)'
@@ -24,6 +26,8 @@ class Moderation:
 		@commands.has_permissions(ban_members=True)
 		async def ban(self, ctx, user : discord.Member, *, reason :str = None):
 			"""bans the user"""
+			if user.bot:
+				return
 			await user.ban()
 	
 			title = ctx.message.author.display_name + ' banned ' + user.display_name + ' (`' + str(user.id) + '`)'
@@ -38,7 +42,15 @@ class Moderation:
 		@commands.has_permissions(manage_messages=True)
 		async def mute(self, ctx, user : discord.Member, time : int, denomination : str, *, reason : str = None):
 			"""mutes the user for the specified amount of time"""
-			if denomination in ['s', 'm', 'h', 'd']:
+			if denomination in ['s', 'm', 'h', 'd', 'second', 'minute', 'hour', 'day', 'seconds', 'minutes', 'hours', 'days']:
+				if denomination in ['second', 'seconds']:
+					denomination = 's'
+				if denomination in ['minute', 'minutes']:
+					denomination = 'm'
+				if denomination in ['hour', 'hours']:
+					denomination = 'h'
+				if denomination in ['day', 'days']:
+					denomination = 'd'
 				role = get_muterole(ctx.guild)
 				if role in user.roles:
 					umention = user.mention

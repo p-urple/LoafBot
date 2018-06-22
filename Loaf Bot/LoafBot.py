@@ -139,15 +139,14 @@ async def on_guild_join(guild):
 	sid = str(guild.id)
 	c = con.cursor()
 	try:
-		c.execute('SELECT * FROM guilds WHERE guildid=(?)', (sid,))
+		c.execute('SELECT count(1) FROM guilds WHERE guildid=(?)', (sid,))
+		exists = c.fetchone()[0]
+		if not exists:
+			c.execute('INSERT INTO guilds VALUES (?, ?, ?, ?, ?)', (sid, None, None, None, None))
 	except:
-		guildinfo = (sid, None, None, None, None)
-		try:
-			c.execute('INSERT INTO guilds VALUES (?, ?, ?, ?, ?)', guildinfo)
-		except:
-			c.execute('''CREATE TABLE guilds
-						 (guildid integer, publiclogs integer, modlogs integer, starboard integer, muterole integer)''')
-			c.execute('INSERT INTO guilds VALUES (?, ?, ?, ?, ?)', guildinfo)
+		c.execute('''CREATE TABLE guilds
+			     (guildid integer, publiclogs integer, modlogs integer, starboard integer, muterole integer)''')
+		c.execute('INSERT INTO guilds VALUES (?, ?, ?, ?, ?)', (sid, None, None, None, None))
 	con.commit()
 
 	guild.system_channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features.	 Use `>help` to get started.')

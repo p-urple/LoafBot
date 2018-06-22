@@ -13,14 +13,14 @@ async def send_modlogs(bot, guild, *args, **kwargs):
 	if row['modlogs'] is not None:
 		await bot.get_channel(row['modlogs']).send(*args, **kwargs)
 
-async def send_publiclogs(bot, guild, embed_content, *args, **kwargs):
+async def send_publiclogs(bot, guild, *args, **kwargs):
 	c = con.cursor()
 	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
 	row = c.fetchone()
 	if row['modlogs'] is not None:
-		await bot.get_channel(row['modlogs']).send(*args, **kwargs, embed=embed_content)
+		await bot.get_channel(row['modlogs']).send(*args, **kwargs)
 	if row['publiclogs'] is not None:
-		await bot.get_channel(row['publiclogs']).send(*args, **kwargs, embed=embed_content)
+		await bot.get_channel(row['publiclogs']).send(*args, **kwargs)
 
 async def send_starboard(bot, guild, *args, **kwargs):
 	c = con.cursor()

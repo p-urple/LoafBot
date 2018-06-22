@@ -308,6 +308,8 @@ async def help(ctx):
 	**MODERATION ONLY:**
 	`>mute <user> <s/m/h/d> [reason]`: mutes the user for the specified amount of time
 	`>unmute <user>`: unmutes the specified muted user
+	`>kick <user> [reason]`: kicks the user
+	`>ban <user> [reason]`: bans the user
 	
 	**CONFIGURATION COMMANDS:**
 	`>muterole <role name>`: used to assign the role given to muted members -- *remember to us the exact role name in quotes. ("Role Name")*
@@ -323,7 +325,6 @@ async def help(ctx):
 	await ctx.send(embed=em)
 
 @bot.command()
-
 @commands.has_permissions(manage_channels=True)
 async def muterole(ctx, rolename : discord.Role):
 	c = con.cursor()
@@ -388,7 +389,7 @@ async def support(ctx):
 
 @bot.command()
 async def invite(ctx):
-	oauth2 = 'https://discordapp.com/api/oauth2/authorize?client_id=430438798141423617&permissions=469093376&scope=bot'
+	oauth2 = 'https://discordapp.com/api/oauth2/authorize?client_id=430438798141423617&permissions=334883974&scope=bot'
 	await ctx.send('Add the bot to your server using {}'.format(oauth2))
 
 @bot.command()
@@ -463,7 +464,6 @@ async def roles(ctx, user : discord.Member = None):
 		em = discord.Embed(title=title, description=rolelist, colour=0x4cff30)
 		em.set_author(name=user.display_name, icon_url=user.avatar_url)	
 		await ctx.send(embed=em)
-
 
 @bot.command(pass_context=True)
 @commands.has_permissions(manage_messages=True)

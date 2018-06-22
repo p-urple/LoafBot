@@ -8,7 +8,7 @@ class Moderation:
 
         @commands.command(pass_context=True)
         @commands.has_permissions(manage_messages=True)
-        async def mute(self, ctx, user : discord.Member, tint :int = None, tdenom :str = None, *, reason : str = None):
+        async def mute(self, ctx, user : discord.Member, time : int, denomination : str, *, reason : str = None):
             """mutes the user for the specified amount of time"""
             if tdenom in ['s', 'm', 'h', 'd']:
                 role = get_muterole(ctx.guild)
@@ -38,7 +38,7 @@ class Moderation:
                     await ctx.send(muted)
                     await send_publiclogs(self.bot, ctx.guild, muted)
                     timedenoms = {'s':1, 'm':60, 'h':3600, 'd':86400}
-                    t = tint * timedenoms[tdenom]
+                    t = time * timedenoms[denomination]
                     await asyncio.sleep(t)
                     if role in user.roles:
                         await user.remove_roles(role)
@@ -46,8 +46,7 @@ class Moderation:
 
 
             else:
-                await ctx.send('Correct usage is: >mute <@person> <time integer> <s/m/h/d> <reason(optional)>')
-
+                await ctx.send('Correct usage is: >mute <user> <time integer> <s/m/h/d> [reason]')
 
         @commands.command()
         @commands.has_permissions(manage_messages=True)

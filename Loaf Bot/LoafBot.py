@@ -1,37 +1,46 @@
 import discord
-import random
 import asyncio
 import sqlite3
 from discord.ext import commands
+from utils import *
 
 bot = commands.Bot(command_prefix= '>')
 con = sqlite3.connect('discord.db')
 con.row_factory = sqlite3.Row
 
 
-helpm = """**FUN COMMANDS:**
-	`>clap <message>`: sends a fun message with clap emojis
-	`>mock <message>`: sends a fun message with letters randomly turned uppercase and lowercase
+###########################################################################################################################################################
+# helpm = """**FUN COMMANDS:**                                                                                                                            #
+# `>clap <message>`: sends a fun message with clap emojis                                                                                                 #
+# 	`>mock <message>`: sends a fun message with letters randomly turned uppercase and lowercase                                                       #
+# 	                                                                                                                                                  #
+# 	**UTILITY COMMANDS:**                                                                                                                             #
+# 	`>roles [user]`: sends the list of roles for the server, or for the specified user, along with their IDs                                          #
+# 	`>support`: sends an invite to the support server                                                                                                 #
+# 	`>invite`: sends the OAuth2 URL used for adding the bot to a server                                                                               #
+# 	                                                                                                                                                  #
+# 	**MODERATION ONLY:**                                                                                                                              #
+# 	`>mute <user> <s/m/h/d> [reason]`: mutes the user for the specified amount of time                                                                #
+# 	`>unmute <user>`: unmutes the specified muted user                                                                                                #
+# 	                                                                                                                                                  #
+# 	**CONFIGURATION COMMANDS:**                                                                                                                       #
+# 	`>muterole <role name>`: used to assign the role given to muted members -- *remember to us the exact role name in quotes. ("Role Name")*          #
+# 	`>modlog <channel>`: used to assign the mod log to a channel                                                                                      #
+# 	`>publiclog <channel>`: used to assign an optional second log that shows only mutes for regular users to view                                     #
+# 	`>starboard <channel>`: used to assign the starboard to a channel                                                                                 #
+# 	                                                                                                                                                  #
+# 	*<> = necessary		 [] = optional*"""                                                                                                        #
+###########################################################################################################################################################
 	
-	**UTILITY COMMANDS:**
-	`>roles [user]`: sends the list of roles for the server, or for the specified user, along with their IDs \n
-	`>support`: sends an invite to the support server
-	`>invite`: sends the OAuth2 URL used for adding the bot to a server
-	
-	**MODERATION ONLY:**
-	`>mute <user> <s/m/h/d> [reason]`: mutes the user for the specified amount of time
-	`>unmute <user>`: unmutes the specified muted user
-	
-	**CONFIGURATION COMMANDS:**
-	`>muterole <role name>`: used to assign the role given to muted members -- *remember to us the exact role name in quotes. ("Role Name")*
-	`>modlog <channel>`: used to assign the mod log to a channel
-	`>publiclog <channel>`: used to assign an optional second log that shows only mutes for regular users to view
-	`>starboard <channel>`: used to assign the starboard to a channel
-	
-	*<> = necessary		 [] = optional*"""
-	
-bot.remove_command('help')
+startup_extensions = ["fun", "utility", "config", "moderation"]
 
+if __name__ == '__main__':
+    for extension in startup_extensions:
+        try:
+            bot.load_extension(extension)
+        except Exception as e:
+            print(f'Failed to load extension {extension}.')
+            print(e)
 @bot.event
 async def on_ready():
 	print('Logged in...')
@@ -71,52 +80,7 @@ async def on_guild_join(guild):
 
 	guild.system_channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features.	 Use `>help` to get started.')
 
-async def send_modlogs(guild, *args, **kwargs):
-	c = con.cursor()
-	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
-	row = c.fetchone()
-	if row['modlogs'] is not None:
-		await bot.get_channel(row['modlogs']).send(*args, **kwargs)
 
-async def send_publiclogs(guild, *args, **kwargs):
-	c = con.cursor()
-	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
-	row = c.fetchone()
-	if row['modlogs'] is not None:
-		await bot.get_channel(row['modlogs']).send(*args, **kwargs)
-	if row['publiclogs'] is not None:
-		await bot.get_channel(row['publiclogs']).send(*args, **kwargs)
-
-async def send_starboard(guild, *args, **kwargs):
-	c = con.cursor()
-	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
-	row = c.fetchone()
-	if row['starboard'] is not None:
-		await bot.get_channel(row['starboard']).send(*args, **kwargs)
-
-def get_muterole(guild):
-	c = con.cursor()
-	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
-	row = c.fetchone()
-	return discord.utils.get(guild.roles, id=row['muterole'])
-
-def get_field(guild, field):
-	c = con.cursor()
-	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
-	row = c.fetchone()
-	return row[field]
-
-def set_embed_image_to_message_image(em, message):
-	try:
-		if message.content.startswith('https://'):
-			em.set_image(url=message.content)
-	except:
-		pass
-	try:
-		attach = message.attachments
-		em.set_image(url = attach[0].url)
-	except:
-		pass
 	
 @bot.event
 async def on_member_join(member):
@@ -125,7 +89,6 @@ async def on_member_join(member):
 	c = con.cursor()
 	if member.bot == True:
 		return
-
 
 	try:												   
 		for i in c.execute('SELECT * FROM users WHERE uid=(?) AND gid=?', (uid, gid)):				     
@@ -167,9 +130,9 @@ async def on_member_join(member):
 	em = discord.Embed(title = 'Member Joined: \n \n', description=des, colour=0x51cc72)
 	em.set_author(name=member.display_name, icon_url=member.avatar_url)
 
-	await send_modlogs(member.guild, embed = em)
+	await send_modlogs(bot, member.guild, embed = em)
 	if returning:
-		await send_modlogs(member.guild, embed = em2)
+		await send_modlogs(bot, member.guild, embed = em2)
 	
 	con.commit()
 
@@ -201,7 +164,7 @@ async def on_member_remove(member):
 	
 	em = discord.Embed(title='Member Left: \n \n', description=des, colour=0xe74c3c)
 	em.set_author(name=member.display_name, icon_url=member.avatar_url)
-	await send_modlogs(member.guild, embed = em)
+	await send_modlogs(bot, member.guild, embed = em)
 	con.commit()
 
 @bot.event
@@ -217,7 +180,7 @@ async def on_raw_reaction_add(reaction, messageid, channelid, member):
 		em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
 		em.set_footer(text='This meme recieved enough stars to make it into #bestof')
 		set_embed_image_to_message_image(em,message)	
-		await send_starboard(message.guild, embed = em)
+		await send_starboard(bot, message.guild, embed = em)
 		cache = open("bestof.txt", "a+",encoding="utf8") 
 		cache.write(str(messageid) + '\n')
 		cache.close()
@@ -238,7 +201,7 @@ async def on_message_delete(message):
 	set_embed_image_to_message_image(em,message)	
 
 
-	await send_modlogs(message.guild, embed = em)
+	await send_modlogs(bot, message.guild, embed = em)
 
 	con.commit()
 
@@ -264,176 +227,21 @@ async def on_message_edit(message, after):
 	em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
 	set_embed_image_to_message_image(em, message)
 
-	await send_modlogs(message.guild, embed = em)
+	await send_modlogs(bot, message.guild, embed = em)
 	con.commit()
 
 
-@bot.command(pass_context=True)
-async def help(ctx):
-	helpt = "Commands for {}:\n\n".format(bot.user.display_name)
-	#edit the help message at top of file
-	
-	em = discord.Embed(title=helpt, description=helpm, colour=0x9b59b6)
-	em.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
-
-	await ctx.send(embed=em)
-
-@bot.event
-async def on_mention(ctx):
-	helpt = "Commands for {}:\n\n".format(bot.user.display_name)
-	#edit the help message at top of file
-
-	em = discord.Embed(title=helpt, description=helpm, colour=0x9b59b6)
-	em.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
-
-	await ctx.send(embed=em)
-
-@bot.command()
-@commands.has_permissions(manage_channels=True)
-async def muterole(ctx, *, rolename : discord.Role):
-	c = con.cursor()
-	c.execute("UPDATE guilds SET muterole=(?) WHERE guildid=(?)", (rolename.id, ctx.guild.id))
-	await ctx.send('Mute role set.')
-	con.commit()
-
-@bot.command()
-@commands.has_permissions(manage_channels=True)
-async def modlog(ctx, channel : discord.TextChannel):
-	c = con.cursor()
-	c.execute("UPDATE guilds SET modlogs=(?) WHERE guildid=(?)", (channel.id, ctx.guild.id))
-	await ctx.send("Mod log channel set.")
-	con.commit()
-
-@bot.command()
-@commands.has_permissions(manage_channels=True)
-async def publiclog(ctx, channel : discord.TextChannel):
-	c = con.cursor()
-	c.execute("UPDATE guilds SET publiclogs=(?) WHERE guildid=(?)", (channel.id, ctx.guild.id))
-	await ctx.send("Public log channel set.")
-	con.commit()
-
-@bot.command()
-@commands.has_permissions(manage_channels=True)
-async def starboard(ctx, channel : discord.TextChannel):
-	c = con.cursor()
-	c.execute("UPDATE guilds SET starboard=(?) WHERE guildid=(?)", (channel.id, ctx.guild.id))
-	await ctx.send("Starboard channel set.")
-	con.commit()
-
-@bot.command()
-async def support(ctx):
-	await ctx.send('Join the support server at {}'.format('https://discord.gg/uJR4rcW'))
-
-@bot.command()
-async def invite(ctx):
-	oauth2 = 'https://discordapp.com/api/oauth2/authorize?client_id=430438798141423617&permissions=469093376&scope=bot'
-	await ctx.send('Add the bot to your server using {}'.format(oauth2))
-
-@bot.command()
-async def clap(ctx, *, sentence : str = None):
-	if sentence is None:
-		await ctx.send('You have to say something before this command works')
-	else:
-		sentencetemp = ':clap:' + sentence.replace(' ', ':clap:') + ':clap:'
-		await ctx.send(sentencetemp)
-
-@bot.command()
-async def smh(ctx, *, headshake : str = None):
-	if headshake is None:
-		await ctx.send('You have to say something before this command works')
-	else:
-		headshake = headshake.replace('smh', 'smh my head') + ' smh'
-		await ctx.send(headshake)
-
-@bot.command()
-async def mock(ctx, *, mocktxt : str = None):
-	if mocktxt == None:
-		await ctx.send('You have to say something before this command works')
-	else:
-		mockedtxt = ''
-		for i in mocktxt:
-			mockedtxt += i.lower() if random.randint(1, 100) < 51 else i.upper()
-		await ctx.send(mockedtxt)
-
-@bot.command()
-async def roles(ctx, user : discord.Member = None):
-	if user == None:
-		user = ctx.author
-	umention = user.mention
-				
-	rolelist = ''
-	counter = 0
-	for role in user.roles:
-		rolelist += str(role.id)
-		rolelist += '	---   '
-		rolelist += role.name
-		rolelist += '\n'
-		counter += 1
-			
-	rolelist += '\n **'
-	rolelist += str(counter)
-	rolelist += ' roles**'
-		
-	em = discord.Embed(title = 'Roles for **' + user.display_name + '**:' , description = rolelist, colour = 0x4cff30)
-	em.set_author(name=user.display_name, icon_url=user.avatar_url)	
-	await ctx.send(embed=em)
-
-
-@bot.command(pass_context=True)
-@commands.has_permissions(manage_messages=True)
-async def mute(ctx, user : discord.Member, tint :int = None, tdenom :str = None, *, reason : str = None):
-	c = con.cursor()
-	if tdenom in ['s', 'm', 'h', 'd']:
-		role = get_muterole(ctx.guild)
-		if role in user.roles:
-			umention = user.mention
-			already = umention
-			already += ' has already been muted'
-			await ctx.send(already)
-		else:
-			await user.add_roles(role)
-			umention = user.mention
-			if reason is None:
-				muted = umention
-				muted += ' was muted for '
-				muted += str(tint)
-				muted += tdenom
-			else:
-				muted = umention
-				muted += ' was muted for '
-				muted += str(tint)
-				muted += tdenom
-				muted += ' (`'
-				muted += reason
-				muted += '`)'
-
-
-			await ctx.send(muted)
-			await send_publiclogs(ctx.guild, muted)
-			timedenoms = {'s':1, 'm':60, 'h':3600, 'd':86400}
-			t = tint * timedenoms[tdenom]
-			await asyncio.sleep(t)
-			if role in user.roles:
-				await user.remove_roles(role)
-				await send_publiclogs(ctx.guild, user.mention + ' is no longer muted.')
-					
-
-	else:
-		await ctx.send('Correct usage is: >mute <@person> <time integer> <s/m/h/d> <reason(optional)>')
-	
-		
-@bot.command()
-@commands.has_permissions(manage_messages=True)
-async def unmute(ctx, user: discord.Member):
-	role = get_muterole(ctx.guild)
-	umention = user.mention
-	if role in user.roles:
-		await user.remove_roles(role)
-		await ctx.send(umention + ' is no longer muted.')
-		await send_publiclogs(ctx.guild, user.mention + ' is no longer muted.')
-	else:
-		await ctx.send(umention + ' is not muted.')
-
+######################################################################################
+# @bot.command(pass_context=True)                                                    #
+# async def help(ctx):                                                               #
+# 	helpt = "Commands for {}:\n\n".format(bot.user.display_name)                 #
+# 	#edit the help message at top of file                                        #
+# 	                                                                             #
+# 	em = discord.Embed(title=helpt, description=helpm, colour=0x9b59b6)          #
+# 	em.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)              #
+#                                                                                    #
+# 	await ctx.send(embed=em)                                                     #
+######################################################################################
 
 
 @bot.event
@@ -445,5 +253,25 @@ async def on_command_error(ctx,error):
 	await ctx.send(error)
 	print(error)
 
+
+@bot.command(name='load', hidden=True)
+@commands.is_owner()
+async def cog_load(ctx, *, cog: str):
+	"""loads a module."""
+	bot.load_extension(cog)
+
+@bot.command(name='unload', hidden=True)
+@commands.is_owner()
+async def cog_unload(ctx, *, cog: str):
+	"""unloads a module."""
+	bot.unload_extension(cog)
+
+
+@bot.command(name='reload', hidden=True)
+@commands.is_owner()
+async def cog_reload(ctx, *, cog: str):
+	"""reloads a module."""
+	bot.unload_extension(cog)
+	bot.load_extension(cog)
 
 bot.run(open('token.txt','r').read())

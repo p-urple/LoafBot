@@ -12,7 +12,7 @@ class Utility:
     @commands.command()
     async def invite(self, ctx):
         """sends the OAuth2 URL used for adding the bot to a server"""
-        oauth2 = 'https://discordapp.com/api/oauth2/authorize?client_id=430438798141423617&permissions=469093376&scope=bot'
+        oauth2 = 'https://discordapp.com/api/oauth2/authorize?client_id=430438798141423617&permissions=334883910&scope=bot'
         await ctx.send('Add the bot to your server using {}'.format(oauth2))
 
 

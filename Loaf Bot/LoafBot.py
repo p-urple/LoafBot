@@ -168,8 +168,6 @@ async def on_member_join(member):
 			
 			role = discord.utils.get(member.guild.roles, id=i[2])			 
 			try:								      
-				if role.id == 430437006787608577:
-					continue
 				await member.add_roles(role)
 				addsuccess.append(role.name)
 			except:

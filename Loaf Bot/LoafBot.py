@@ -150,8 +150,6 @@ async def on_guild_join(guild):
 	con.commit()
 
 	guild.system_channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features.	 Use `>help` to get started.')
-
-
 	
 @bot.event
 async def on_member_join(member):
@@ -309,7 +307,6 @@ async def on_command_error(ctx,error):
 	else:
 		await ctx.send(error)
 	print(error)
-
 
 @bot.command(name='load', hidden=True)
 @commands.is_owner()

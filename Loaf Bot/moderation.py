@@ -10,7 +10,7 @@ class Moderation:
 	@commands.has_permissions(kick_members=True)
 	async def kick(self, ctx, user : discord.Member, *, reason = None):
 		"""kicks the user"""
-		if user.id == 430438798141423617:
+		if user.id == 430438798141423617 or if user.id == 459174398889295882:
 			await ctx.send("Please don't hurt me...")
 			return
 		if ctx.message.author == user:

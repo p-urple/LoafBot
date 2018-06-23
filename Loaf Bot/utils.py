@@ -27,7 +27,7 @@ async def send_starboard(bot, guild, *args, **kwargs):
 	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
 	row = c.fetchone()
 	if row['starboard'] is not None:
-		await get_channel(row['starboard']).send(*args, **kwargs)
+		await bot.get_channel(row['starboard']).send(*args, **kwargs)
 
 def get_muterole(guild):
 	c = con.cursor()

@@ -68,5 +68,6 @@ class Fun:
 		rolls = [random.randint(1,dicedenom) for i in range(number)]
 		rollsmesg = '(' + ' + '.join([str(i) for i in rolls]) + ')' + ((' + ' + str(addend)) if addend != 0 else '') + ' = '
 		await ctx.send(rollsmesg + str(sum(rolls)+addend))
+
 def setup(bot):
 	bot.add_cog(Fun(bot))

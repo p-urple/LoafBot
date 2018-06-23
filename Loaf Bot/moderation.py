@@ -91,7 +91,7 @@ class Moderation:
 				await asyncio.sleep(t)
 				if role in user.roles:
 					await user.remove_roles(role)
-					await send_publiclogs(self.bot, ctx.guild, None, user.mention + ' is no longer muted.')
+					await send_publiclogs(self.bot, ctx.guild, None, f'{user.mention} is no longer muted.')
 
 		else:
 			await ctx.send('Correct usage is: >mute <user> <time integer> <s/m/h/d> [reason]')

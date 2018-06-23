@@ -44,7 +44,7 @@ class Fun:
 			flip = random.choice(['tails', 'heads', 'tails', 'heads', 'tails', 'heads', 'heads', 'tails'])
 			msg = f'{ctx.message.author.mention} the result was **{flip}**. Sorry, you lost.'
 			if headstails == flip:
-				msg = f'{ctx.message.author.mention} the result was **{flip}**. Congradulations, you won!'
+				msg = f'{ctx.message.author.mention} the result was **{flip}**. Congratulations, you won!'
 			await ctx.send(msg)
 
 	@commands.command()

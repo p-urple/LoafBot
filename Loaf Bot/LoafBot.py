@@ -316,13 +316,14 @@ async def on_command_error(ctx,error):
 async def cog_load(ctx, *, cog: str):
 	"""loads a module."""
 	bot.load_extension(cog)
+	await ctx.send(f'Loaded the {cog} cog')
 
 @bot.command(name='unload', hidden=True)
 @commands.is_owner()
 async def cog_unload(ctx, *, cog: str):
 	"""unloads a module."""
 	bot.unload_extension(cog)
-
+	await ctx.send(f'Unloaded the {cog} cog')
 
 @bot.command(name='reload', hidden=True)
 @commands.is_owner()
@@ -330,6 +331,7 @@ async def cog_reload(ctx, *, cog: str):
 	"""reloads a module."""
 	bot.unload_extension(cog)
 	bot.load_extension(cog)
+	await ctx.send(f'Reloaded the {cog} cog')
 
 
 _mentions_transforms = {

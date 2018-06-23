@@ -3,8 +3,8 @@ from discord.ext import commands
 import asyncio
 from utils import *
 class Moderation:
-		def __init__(self, bot):
-			self.bot = bot
+	def __init__(self, bot):
+		self.bot = bot
 
 	@commands.command()
 	@commands.has_permissions(kick_members=True)
@@ -12,10 +12,10 @@ class Moderation:
 		"""kicks the user"""
 		await ctx.guild.kick(user)
 
-		title = '{ctx.message.author.display_name} kicked {user.display_name}'
-		message = user.mention + '\n**' + user.id + '**'
+		title = f'{ctx.message.author.display_name} kicked {user.display_name} ({user.id})'
+		message = ''
 		if reason != None:
-			message += '\n{reason}'
+			message += f'\n{reason}'
 
 		em = discord.Embed(title=title, description=message, colour=0x0012d8)
 		em.set_author(name=user.display_name, icon_url=user.avatar_url)
@@ -27,10 +27,10 @@ class Moderation:
 		"""bans the user"""
 		await ctx.guild.ban(user)
 
-		title = ctx.message.author.display_name + ' banned ' + user.display_name
-		message = user.mention + '\n**+ user.id' + '**'
+		title = ctx.message.author.display_name + ' banned ' + user.display_name + '(' + str(user.id) + ')'
+		message = ''
 		if reason != None:
-			message += '\n' + reason
+			message += f'\n{reason}'
 
 		em = discord.Embed(title=title, description=message, colour=0x00086b)
 		em.set_author(name=user.display_name, icon_url=user.avatar_url)

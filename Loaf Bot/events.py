@@ -112,11 +112,10 @@ class Events:
 		truereaction = discord.utils.get(message.reactions, emoji = '⭐')
 		if member == self.bot.user.id or message.author.bot == True:
 			return
-		if truereaction.count == 1 and reaction.name == '⭐' and str(messageid) not in open('bestof.txt').readlines():
+		if truereaction.count == 5 and reaction.name == '⭐' and str(messageid) not in open('bestof.txt').readlines():
 			print('bestof')
 			em = discord.Embed(title=':ok_hand: Nice :ok_hand:', description=message.content, colour=0xbc52ec)
 			em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
-			em.set_footer(text='This meme recieved enough stars to make it into #bestof')
 			set_embed_image_to_message_image(em,message)	
 			await send_starboard(self.bot, message.guild, embed = em)
 			cache = open("bestof.txt", "a+",encoding="utf8") 

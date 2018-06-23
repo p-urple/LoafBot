@@ -73,13 +73,13 @@ class Moderation:
 					muted += '`)'
 
 				await ctx.send(muted)
-				await send_publiclogs(self.bot, ctx.guild, None, muted)
+				await send_publiclogs(self.bot, ctx.guild, muted)
 				timedenoms = {'s':1, 'm':60, 'h':3600, 'd':86400}
 				t = time * timedenoms[denomination]
 				await asyncio.sleep(t)
 				if role in user.roles:
 					await user.remove_roles(role)
-					await send_publiclogs(self.bot, ctx.guild, None, user.mention + ' is no longer muted.')
+					await send_publiclogs(self.bot, ctx.guild, user.mention + ' is no longer muted.')
 
 		else:
 			await ctx.send('Correct usage is: >mute <user> <time integer> <s/m/h/d> [reason]')

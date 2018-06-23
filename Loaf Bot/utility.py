@@ -5,7 +5,7 @@ class Utility:
         self.bot = bot
         
     @commands.command()
-    async def support(self, ctx):
+    async def server(self, ctx):
         """sends an invite to the support server"""
         await ctx.send('Join the support server at {}'.format('https://discord.gg/uJR4rcW'))
 

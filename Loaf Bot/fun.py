@@ -1,5 +1,6 @@
 import discord
 import random
+import re
 from discord.ext import commands
 
 class Fun:
@@ -28,7 +29,7 @@ class Fun:
 	async def mock(self, ctx, *, mocktxt : str = None):
 		"""sends a fun message with letters randomly turned uppercase and lowercase"""
 		if mocktxt is None:
-			await ctx.send('You have to put something befor this command works')
+			await ctx.send('You have to put something before this command works')
 			return
 		mockedtxt = ''.join([i.lower() if random.randint(1, 100) < 51 else i.upper() for i in mocktxt])
 		await ctx.send(mockedtxt)
@@ -36,16 +37,18 @@ class Fun:
 	@commands.command()
 	async def cointoss(self, ctx, headstails = None):
 		"""Pick a side: heads or tails?"""
-		dict = {'h':'heads', 't':'tails', 'heads':'heads', 'tails':'tails'}
-		headstails = dict[headstails]
+		hdict = {'h':'heads', 't':'tails', 'heads':'heads', 'tails':'tails'}
+		headstails = hdict[headstails]
 		if headstails not in ['heads', 'tails']:
 			await ctx.send('Choose a side first')
 		else:
-			flip = random.choice(['tails', 'heads', 'tails', 'heads', 'tails', 'heads', 'heads', 'tails'])
-			msg = f'{ctx.message.author.mention} the result was **{flip}**. Sorry, you lost.'
-			if headstails == flip:
-				msg = f'{ctx.message.author.mention} the result was **{flip}**. Congradulations, you won!'
-			await ctx.send(msg)
+			headstails = headstails == 'heads'
+			is_heads = random.randint(0,1)
+			result = 'heads' if is_heads else 'tails'
+			if headstails == is_heads:
+				await ctx.send(f'{ctx.message.author.mention} the result was **{result}**. Congratulations, you won!')
+			else:
+				await ctx.send(f'{ctx.message.author.mention} the result was **{result}**. Sorry, you lost.')
 
 	@commands.command()
 	async def reverse(self, ctx, *, text : str = None):
@@ -55,43 +58,15 @@ class Fun:
 		else:
 			await ctx.send(text[::-1])
 
-'''	@commands.command()
-	async def dice(self, ctx, amount):
-		"""rolls some die (1d20+3)"""		
-		#try:
-		number = ''
-		size = ''
-		add = ''
-		list = [number, size, add]
-		x = 0
-		for [i] in [amount.split('', '')]:
-			if [i] == 'd':
-				x = 1
-				pass
-			if [i] == '+':
-				x = 2
-				pass
-			list[x] += [i]
-		except:
-			await ctx.send('Please make sure you use the `<amount of die>`d`<size of die>` format')
-			return
-		message = '('
-		total = 0
-		number = int(number)
-		while number > 0:
-			roll += random.randint(1, int(size))
-			total += roll
-			if int(number) != 1:
-				message += f'{str(roll)} + '
-			else:
-				message += f'{str(roll)} '
-				if add != '':
-					message += f'+ {int(add)}'
-					total += int(add)
-			number -= 1
-			total += int(add)
-			message += f' = **{total}**' 
-		await ctx.send(message)'''
-
+	@commands.command()
+	async def dice(self, ctx, amount: str):
+		"""rolls some die (6d20+3)"""		
+		regex = re.search(r'(\d*)d(\d+)\+?(\d*)', amount)
+		number = int(regex.group(1)) if regex.group(1) != '' else 1
+		dicedenom = int(regex.group(2))
+		addend = int(regex.group(3)) if regex.group(3) != '' else 0
+		rolls = [random.randint(1,dicedenom) for i in range(number)]
+		rollsmesg = '(' + ' + '.join([str(i) for i in rolls]) + ')' + ((' + ' + str(addend)) if addend != 0 else '') + ' = '
+		await ctx.send(rollsmesg + str(sum(rolls)+addend))
 def setup(bot):
 	bot.add_cog(Fun(bot))

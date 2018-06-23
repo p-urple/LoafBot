@@ -10,6 +10,12 @@ class Moderation:
 	@commands.has_permissions(kick_members=True)
 	async def kick(self, ctx, user : discord.Member, *, reason = None):
 		"""kicks the user"""
+		if user.id == 430438798141423617:
+			await ctx.send("Please don't hurt me...")
+			return
+		if ctx.message.author == user:
+			await ctx.send("Why are you hitting yourself?")
+			return
 		await ctx.guild.kick(user)
 
 		title = f'{ctx.message.author.display_name} kicked {user.display_name} ({user.id})'
@@ -25,6 +31,12 @@ class Moderation:
 	@commands.has_permissions(ban_members=True)
 	async def ban(self, ctx, user : discord.Member, *, reason = None):
 		"""bans the user"""
+		if user.id == 430438798141423617:
+			await ctx.send("Please don't hurt me...")
+			return
+		if ctx.message.author == user:
+			await ctx.send("Why are you hitting yourself?")
+			return
 		await ctx.guild.ban(user)
 
 		title = ctx.message.author.display_name + ' banned ' + user.display_name + '(' + str(user.id) + ')'

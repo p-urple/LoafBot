@@ -6,6 +6,9 @@ from discord.ext import commands
 con = sqlite3.connect('discord.db')
 con.row_factory = sqlite3.Row
 
+def __init__(self, bot):
+	self.bot = bot
+
 async def send_modlogs(bot, guild, *args, **kwargs):
 	c = con.cursor()
 	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
@@ -28,6 +31,17 @@ async def send_starboard(bot, guild, *args, **kwargs):
 	row = c.fetchone()
 	if row['starboard'] is not None:
 		await bot.get_channel(row['starboard']).send(*args, **kwargs)
+
+def load_prefixes(bot):
+	c = con.cursor()
+	for row in c.execute("SELECT * FROM prefixes WHERE guildid"):
+		bot.prefixes[row[guildid]] = row[prefix]
+
+def get_pre(bot, message):
+	if message.content.startswith('>'):
+		return '>'
+	else:
+		return bot.prefixes[message.guild.id]
 
 def get_muterole(guild):
 	c = con.cursor()

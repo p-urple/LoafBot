@@ -1,5 +1,7 @@
 import discord
+import sqlite3
 from discord.ext import commands
+from utils import *
 class Utility:
 	def __init__(self, bot):
 		self.bot = bot
@@ -83,6 +85,34 @@ class Utility:
 		em = discord.Embed(title = f'Roles for **{object}**:' , description = rolelist, colour = 0x4cff30)
 		em.set_author(name=convoker.display_name, icon_url=convoker.avatar_url)	
 		await ctx.send(embed=em)
+
+	@commands.command()
+	async def prefix(self, ctx):
+		"""shows the custom prefix for this server"""
+		try:
+			prefix = self.bot.prefixes[ctx.message.guild.id]
+			await ctx.send(f'The custom prefix for this server is `{prefix}`')
+		except:
+			await ctx.send('The prefix for this server is `>`')
+
+	@commands.command()
+	@commands.has_permissions(administrator=True)
+	async def setprefix(self, ctx, *, prefix = None):
+		"""sets the custom prefix for this server"""
+		con = sqlite3.connect('discord.db')
+		c = con.cursor()
+		if prefix is not None:
+			c.execute('SELECT count(1) FROM prefixes WHERE guildid=(?)', (ctx.message.guild.id,))
+			exists = c.fetchone()[0]
+			if not exists:
+				c.execute('INSERT INTO prefixes VALUES (?, ?)', (ctx.message.guild.id, prefix))
+			else:
+				c.execute('UPDATE prefixes SET prefix=(?) WHERE guildid=(?)', (prefix, ctx.message.guild.id))
+			self.bot.prefixes[ctx.message.guild.id] = prefix
+			await ctx.send(f'The custom prefix for this server is now `{prefix}`')
+			con.commit()
+		else:
+			await ctx.send('Please provide a prefix')
 
 def setup(bot):
     bot.add_cog(Utility(bot))

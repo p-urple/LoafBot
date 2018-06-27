@@ -72,11 +72,21 @@ class EmbedHelp(commands.HelpFormatter):
 		self._paginator.add_line(ending_note)
 		return self._paginator.pages
 
-
-
-bot = commands.Bot(command_prefix= '>', formatter = EmbedHelp())
 con = sqlite3.connect('discord.db')
-con.row_factory = sqlite3.Row
+c = con.cursor()
+
+try:
+	c.execute('''CREATE TABLE prefixes
+			 (guildid integer, prefix string)''')
+except:
+	pass
+
+bot = commands.Bot(command_prefix=get_pre, formatter = EmbedHelp())
+bot.prefixes = dict()
+
+print(bot)
+
+load_prefixes(bot)
 
 bot.remove_command("help")
 
@@ -128,7 +138,7 @@ async def on_ready():
 	lm += 'discord.py version '
 	lm += discord.__version__
 	lm += '`'
-	
+
 	em = discord.Embed(title=':white_check_mark: **CONNECTED**', description=lm, colour=0x9b59b6)
 	em.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
 
@@ -304,6 +314,8 @@ async def on_command_error(ctx,error):
 		await ctx.send(':x: Error 403: You are forbidden from using that command!')
 	elif isinstance(error, commands.errors.MissingRequiredArgument):
 		await ctx.send(str(error) + " Use >help <command> to see all required arguments.")
+	elif isinstance(error, commands.errors.CommandNotFound):
+		return
 	else:
 		await ctx.send(error)
 	print(error)

@@ -105,9 +105,9 @@ class Events:
 		em = discord.Embed(title = 'Member Joined: \n \n', description=des, colour=0x51cc72)
 		em.set_author(name=member.display_name, icon_url=member.avatar_url)
 
-		await send_modlogs(bot, member.guild, embed = em)
+		await send_modlogs(self.bot, member.guild, embed = em)
 		if returning:
-			await send_modlogs(bot, member.guild, embed = em2)
+			await send_modlogs(self.bot, member.guild, embed = em2)
 
 		con.commit()
 
@@ -140,7 +140,7 @@ class Events:
 		await send_modlogs(bot, member.guild, embed = em)
 		con.commit()
 
-	async def on_raw_reaction_add(self,reaction, messageid, channelid, member):
+	async def on_raw_reaction_add(self, reaction, messageid, channelid, member):
 		c = con.cursor()
 		reactchannel = self.bot.get_channel(channelid)
 		message = await reactchannel.get_message(messageid)

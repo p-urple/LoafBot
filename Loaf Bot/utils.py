@@ -35,14 +35,17 @@ async def send_starboard(bot, guild, *args, **kwargs):
 def load_prefixes(bot):
 	c = con.cursor()
 	for row in c.execute("SELECT * FROM prefixes WHERE guildid"):
-		bot.prefixes[row[guildid]] = row[prefix]
+		bot.prefixes[row['guildid']] = row['prefix']
 
 def get_pre(bot, message):
 	if message.content.startswith('>'):
 		return '>'
 	else:
-		return bot.prefixes[message.guild.id]
-
+		try:
+			return bot.prefixes[message.guild.id]
+		except:
+			return '>'
+		
 def get_muterole(guild):
 	c = con.cursor()
 	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))

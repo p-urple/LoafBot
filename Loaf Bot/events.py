@@ -23,13 +23,42 @@ class Events:
 			c.execute('INSERT INTO guilds VALUES (?, ?, ?, ?, ?)', (sid, None, None, None, None))
 		con.commit()
 
-		guild.system_channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features.	 Use `>help` to get started.')
+		sent = False
+		for channel in guild.text_channels:
+			if sent is False:
+				try:
+					await channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features. Use `>help Config` to get started.')
+					sent = True
+				except:
+					pass
+
+		servercount = self.bot.get_channel(461446497582579722)
+
+		count = 0
+		for i in self.bot.guilds:
+			count += 1
+
+		em=discord.Embed(title=f'**{count} servers**', colour=0x51cc72)
+		em.set_author(name=guild.name, icon_url=guild.icon_url)
+		
+		await servercount.send(embed=em)
 
 	async def on_guild_leave(self, guild):
 		try:
 			c.execute('REMOVE * FROM prefixes WHERE guildid=(?)', (ctx.message.guild.id,))
 		except:
 			pass
+
+		servercount = self.bot.get_channel(461446497582579722)
+
+		count = 0
+		for i in self.bot.guilds:
+			count += 1
+
+		em=discord.Embed(title=f'**{count} servers**', colour=0xe74c3c)
+		em.set_author(name=guild.name, icon_url=guild.icon_url)
+		
+		await servercount.send(embed=em)
 
 	async def on_member_join(self, member):
 		uid = member.id

@@ -137,6 +137,8 @@ async def on_ready():
 	lm += discord.__version__
 	lm += '`'
 
+	discord.Activity(name='>help')
+
 	em = discord.Embed(title=':white_check_mark: **CONNECTED**', description=lm, colour=0x9b59b6)
 	em.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
 

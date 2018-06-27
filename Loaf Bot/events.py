@@ -25,6 +25,12 @@ class Events:
 
 		guild.system_channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features.	 Use `>help` to get started.')
 
+	async def on_guild_leave(self, guild):
+		try:
+			c.execute('REMOVE * FROM prefixes WHERE guildid=(?)', (ctx.message.guild.id,))
+		except:
+			pass
+
 	async def on_member_join(self, member):
 		uid = member.id
 		gid = member.guild.id

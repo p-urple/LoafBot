@@ -18,7 +18,7 @@ class Moderation:
 			return
 		await ctx.guild.kick(user)
 
-		title = f'{ctx.message.author.display_name} kicked {user.display_name} ({user.id})'
+		title = f'{ctx.message.author.display_name} kicked {user.name} ({user.id})'
 		message = ''
 		if reason != None:
 			message += f'\n{reason}'
@@ -39,7 +39,7 @@ class Moderation:
 			return
 		await ctx.guild.ban(user)
 
-		title = ctx.message.author.display_name + ' banned ' + user.display_name + '(' + str(user.id) + ')'
+		title = f'{ctx.message.author.display_name} banned {user.name} ({str(user.id)})'
 		message = ''
 		if reason != None:
 			message += f'\n{reason}'

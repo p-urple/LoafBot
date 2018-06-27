@@ -28,6 +28,28 @@ class Moderation:
 		await send_publiclogs(self.bot, ctx.guild, embed=em)
 
 	@commands.command()
+	@commands.has_permissions(kick_members=True)
+	async def softban(self, ctx, user : discord.Member, *, reason = None):
+		"""bans then unbans the user, deleting all their recent messges"""
+		if user.id == 430438798141423617:
+			await ctx.send("Please don't hurt me...")
+			return
+		if ctx.message.author == user:
+			await ctx.send("Why are you hitting yourself?")
+			return
+		await ctx.guild.ban(user)
+		await ctx.guild.unban(user)
+
+		title = f'{ctx.message.author.display_name} softbanned {user.name} ({str(user.id)})'
+		message = ''
+		if reason != None:
+			message += f'\n{reason}'
+
+		em = discord.Embed(title=title, description=message, colour=0x004ac1)
+		em.set_author(name=user.display_name, icon_url=user.avatar_url)
+		await send_publiclogs(self.bot, ctx.guild, embed=em)
+
+	@commands.command()
 	@commands.has_permissions(ban_members=True)
 	async def ban(self, ctx, user : discord.Member, *, reason = None):
 		"""bans the user"""

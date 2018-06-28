@@ -12,16 +12,17 @@ class Utility:
 		counter = 0
 		message = '```'
 		wrap = 0
-		for server in bot.guilds:
+		for server in self.bot.guilds:
 			if wrap < 50:
 				counter += 1
 				message += f'{counter}. {server.name}\n'
 				wrap += 1
-			elif wrap = 50:
+			elif wrap == 50:
 				counter += 1
 				message += f'{counter}. {server.name}```'
 				wrap = 0
 				await ctx.send(message)
+		message += '```'
 		await ctx.send(message)
 			
 

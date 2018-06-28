@@ -159,8 +159,37 @@ async def on_guild_join(guild):
 		c.execute('INSERT INTO guilds VALUES (?, ?, ?, ?, ?)', (sid, None, None, None, None))
 	con.commit()
 
-	guild.system_channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features.	 Use `>help` to get started.')
+	counter = 0
+	for i in bot.guilds:
+		counter += 1
+
+	em = discord.Embed(title='Joined Server:', description=f'Server Count: **{counter}**', colour=0x51cc72)
+	em.set_author(name=guild.name, icon_url=guild.icon_url)
 	
+	servercount = bot.get_channel(461446497582579722)
+	await servercount.send(embed=em)
+
+	sent = False
+	for channel in guild.channels:
+		while sent is False:
+			try:
+				await channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features.	 Use `>help` to get started.')
+				sent = True
+			except:
+				pass
+
+@bot.event
+async def on_guild_leave(guild):
+	counter = 0
+	for i in bot.guilds:
+		counter += 1
+
+	em = discord.Embed(title='Left Server:', description=f'Server Count: **{counter}**', colour=0xe74c3c)
+	em.set_author(name=guild.name, icon_url=guild.icon_url)
+	
+	servercount = bot.get_channel(461446497582579722)
+	await servercount.send(embed=em)
+
 @bot.event
 async def on_member_join(member):
 	uid = member.id

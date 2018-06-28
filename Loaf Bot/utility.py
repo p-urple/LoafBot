@@ -7,6 +7,25 @@ class Utility:
 		self.bot = bot
 
 	@commands.command()
+	@commands.is_owner()
+	async def servers(self, ctx):
+		counter = 0
+		message = '```'
+		wrap = 0
+		for server in bot.guilds:
+			if wrap < 50:
+				counter += 1
+				message += f'{counter}. {server.name}\n'
+				wrap += 1
+			elif wrap = 50:
+				counter += 1
+				message += f'{counter}. {server.name}```'
+				wrap = 0
+				await ctx.send(message)
+		await ctx.send(message)
+			
+
+	@commands.command()
 	async def server(self, ctx):
 		"""sends an invite to the support server"""
 		await ctx.send('Join the support server at {}'.format('https://discord.gg/uJR4rcW'))

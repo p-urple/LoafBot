@@ -36,7 +36,7 @@ def timedelta_str(dt):
 	days = dt.days
 	hours, r = divmod(dt.seconds, 3600)
 	minutes, sec = divmod(r, 60)
-	days1, hours1, minutes1, secs1 = [(('' if x == 0 else f'{x} minute') + ('s' if x > 1 else '')) for x in [days, hours, minutes, sec]]
+	days1, hours1, minutes1, secs1 = [(('' if x == 0 else f'{x} {y}') + ('s' if x > 1 else '')) for x,y in [(days, "day"), (hours, "hour"),  (minutes, "minute"), (sec, 'second')]]
 
 	uptime = f"{days1} {hours1} {minutes1} {secs1}"
 

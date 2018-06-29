@@ -83,12 +83,12 @@ except:
 	pass
 
 bot = commands.Bot(command_prefix=get_pre, formatter = EmbedHelp())
+bot.message_ids = []
 bot.prefixes = dict()
 
 load_prefixes(bot)
 
 bot.remove_command("help")
-
 
 ###########################################################################################################################################################
 # helpm = """**FUN COMMANDS:**																  #
@@ -138,6 +138,7 @@ async def on_ready():
 	lm += discord.__version__
 	lm += '`'
 
+	bot.start_time = datetime.datetime.now()
 	await bot.change_presence(activity=discord.Game(name='>help'))
 
 	em = discord.Embed(title=':white_check_mark: **CONNECTED**', description=lm, colour=0x9b59b6)
@@ -145,7 +146,6 @@ async def on_ready():
 
 	await modlogchannel.send(embed=em)
 
-	bot.start_time = datetime.datetime.now()
 
 
 

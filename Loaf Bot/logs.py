@@ -7,9 +7,11 @@ class Logging:
 	def __init__(self, bot):
 		self.bot = bot
 
+        
 	async def on_bulk_message_delete(self, payload):
 		self.bot.message_ids = payload.message_ids
 
+        
 	async def on_message_delete(self, message):
 		if message.author.bot is True:
 			return
@@ -30,7 +32,7 @@ class Logging:
 
 		con.commit()
 
-
+        
 	async def on_message_edit(self, message, after):
 		if message.author.bot or message.content == after.content:
 			return

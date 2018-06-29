@@ -116,9 +116,10 @@ class Utility:
 			await ctx.send(f'The custom prefix for this server is `{prefix}`')
 		except:
 			await ctx.send('The prefix for this server is `>`')
+
 	@commands.command()
 	async def uptime(self, ctx):
-		"""the uptime for the bot"""
+		"""shows current uptime"""
 		em = discord.Embed(title=f'Uptime for **{self.bot.user.name}**', description=str(timedelta_str(datetime.datetime.now() - self.bot.start_time)), colour=0x23272a)
 		await ctx.send(embed=em)
 

@@ -27,22 +27,6 @@ class Utility:
 		await ctx.send(message)
 
 	@commands.command()
-	@commands.has_permissions(manage_messages=True)
-	async def purge(self, ctx, amount : int = None):
-		"""purges the specified amount of messages in the channel it is used"""
-		if amount is None:
-			await ctx.send('Please give an amount')
-		if amount == 1:
-			await ctx.send('Just delete it yourself, silly')
-		else:
-			message_limit = amount + 1
-			self.bot.messages = await ctx.message.channel.history(limit=message_limit).flatten()
-			await ctx.message.channel.purge(limit=message_limit, bulk=True)
-			message = await ctx.send(f':white_check_mark: **{str(amount)}** messages deleted')
-			await asyncio.sleep(5)
-			await message.delete()
-
-	@commands.command()
 	async def server(self, ctx):
 		"""sends an invite to the support server"""
 		await ctx.send('Join the support server at {}'.format('https://discord.gg/uJR4rcW'))
@@ -134,6 +118,7 @@ class Utility:
 			await ctx.send('The prefix for this server is `>`')
 	@commands.command()
 	async def uptime(self, ctx):
+		"""the uptime for the bot"""
 		em = discord.Embed(title=f'Uptime for **{self.bot.user.name}**', description=str(timedelta_str(datetime.datetime.now() - self.bot.start_time)), colour=0x23272a)
 		await ctx.send(embed=em)
 

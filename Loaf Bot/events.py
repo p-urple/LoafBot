@@ -10,7 +10,7 @@ class Events:
 	def __init__(self,bot):
 		self.bot = bot
 
-        @self.bot.event
+	@self.bot.event
 	async def on_guild_join(guild):
 		sid = str(guild.id)
 		c = con.cursor()
@@ -44,7 +44,7 @@ class Events:
 				except:
 					pass
 
-        @self.bot.event
+	@self.bot.event
 	async def on_guild_remove(guild):
 		counter = 0
 		for i in self.bot.guilds:
@@ -56,7 +56,7 @@ class Events:
 		servercount = self.bot.get_channel(461446497582579722)
 		await servercount.send(embed=em)
 
-        @self.bot.event
+	@self.bot.event
 	async def on_member_join(self, member):
 		uid = member.id
 		gid = member.guild.id
@@ -108,7 +108,7 @@ class Events:
 
 		con.commit()
 
-        @self.bot.event
+	@self.bot.event
 	async def on_member_remove(self, member):
 		c = con.cursor()
 		uid = member.id
@@ -138,7 +138,7 @@ class Events:
 		await send_modlogs(self.bot, member.guild, embed = em)
 		con.commit()
 
-        @self.bot.event
+	@self.bot.event
 	async def on_raw_reaction_add(self, reaction, messageid, channelid, member):
 		c = con.cursor()
 		reactchannel = self.bot.get_channel(channelid)

@@ -113,7 +113,7 @@ bot.remove_command("help")
 #	*<> = necessary		 [] = optional*"""													  #
 ###########################################################################################################################################################
 	
-startup_extensions = ["fun", "utility", "config", "moderation"]
+startup_extensions = ["fun", "utility", "config", "moderation", "events", "logs"]
 
 if __name__ == '__main__':
 	for extension in startup_extensions:

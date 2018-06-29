@@ -83,6 +83,7 @@ except:
 	pass
 
 bot = commands.Bot(command_prefix=get_pre, formatter = EmbedHelp())
+bot.message_ids = []
 bot.prefixes = dict()
 
 load_prefixes(bot)

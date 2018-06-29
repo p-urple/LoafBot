@@ -1,4 +1,5 @@
 import discord
+import asyncio
 from discord.ext import commands
 from utils import *
 
@@ -8,8 +9,8 @@ con.row_factory = sqlite3.Row
 class Events:
 	def __init__(self,bot):
 		self.bot = bot
-		
-	async def on_guild_join(self, guild):
+
+	async def on_guild_join(guild):
 		sid = str(guild.id)
 		c = con.cursor()
 		try:
@@ -23,41 +24,34 @@ class Events:
 			c.execute('INSERT INTO guilds VALUES (?, ?, ?, ?, ?)', (sid, None, None, None, None))
 		con.commit()
 
+		counter = 0
+		for i in self.bot.guilds:
+			counter += 1
+
+		em = discord.Embed(title='Joined Server:', description=f'Server Count: **{counter}**', colour=0x51cc72)
+		em.set_author(name=guild.name, icon_url=guild.icon_url)
+	
+		servercount = self.bot.get_channel(461446497582579722)
+		await servercount.send(embed=em)
+
 		sent = False
-		for channel in guild.text_channels:
-			if sent is False:
+		for channel in guild.channels:
+			while sent is False:
 				try:
-					await channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features. Use `>help Config` to get started.')
+					await channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features.	 Use `>help` to get started.')
 					sent = True
 				except:
 					pass
 
-		servercount = self.bot.get_channel(461446497582579722)
-
-		count = 0
+	async def on_guild_remove(guild):
+		counter = 0
 		for i in self.bot.guilds:
-			count += 1
+			counter += 1
 
-		em=discord.Embed(title=f'**{count} servers**', colour=0x51cc72)
+		em = discord.Embed(title='Left Server:', description=f'Server Count: **{counter}**', colour=0xe74c3c)
 		em.set_author(name=guild.name, icon_url=guild.icon_url)
-		
-		await servercount.send(embed=em)
-
-	async def on_guild_leave(self, guild):
-		try:
-			c.execute('REMOVE * FROM prefixes WHERE guildid=(?)', (ctx.message.guild.id,))
-		except:
-			pass
-
+	
 		servercount = self.bot.get_channel(461446497582579722)
-
-		count = 0
-		for i in self.bot.guilds:
-			count += 1
-
-		em=discord.Embed(title=f'**{count} servers**', colour=0xe74c3c)
-		em.set_author(name=guild.name, icon_url=guild.icon_url)
-		
 		await servercount.send(embed=em)
 
 	async def on_member_join(self, member):
@@ -137,7 +131,7 @@ class Events:
 
 		em = discord.Embed(title='Member Left: \n \n', description=des, colour=0xe74c3c)
 		em.set_author(name=member.display_name, icon_url=member.avatar_url)
-		await send_modlogs(bot, member.guild, embed = em)
+		await send_modlogs(self.bot, member.guild, embed = em)
 		con.commit()
 
 	async def on_raw_reaction_add(self, reaction, messageid, channelid, member):

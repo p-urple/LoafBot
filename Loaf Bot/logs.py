@@ -1,4 +1,5 @@
 import discord
+import asyncio
 from discord.ext import commands
 from utils import *
 
@@ -6,9 +7,16 @@ class Logging:
 	def __init__(self, bot):
 		self.bot = bot
 
+	async def on_bulk_message_delete(self, payload):
+		self.bot.message_ids = payload.message_ids
+
 	async def on_message_delete(self, message):
 		if message.author.bot is True:
 			return
+		await asyncio.sleep(1)
+		if message.id in self.bot.message_ids:
+			return
+			
 		channel = message.channel.name
 
 		mc = 'Deleted Message in #' + str(channel) + ':'

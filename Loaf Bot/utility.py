@@ -24,7 +24,20 @@ class Utility:
 				await ctx.send(message)
 		message += '```'
 		await ctx.send(message)
-			
+
+	@commands.command()
+	@commands.has_permissions(manage_messages=True)
+	async def purge(self, ctx, amount : int = None):
+		"""purges the specified amount of messages in the channel it is used"""
+		if amount is None:
+			await ctx.send('Please give an amount')
+		if amount == 1:
+			await ctx.send('Just delete it yourself, silly')
+		else:
+			message_limit = amount + 1
+			self.bot.messages = await ctx.message.channel.history(limit=message_limit).flatten()
+			await ctx.message.channel.purge(limit=message_limit, bulk=True)
+			await ctx.send(f':white_check_mark: **{str(amount)}** messages deleted')
 
 	@commands.command()
 	async def server(self, ctx):

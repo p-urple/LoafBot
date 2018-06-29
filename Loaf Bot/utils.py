@@ -40,6 +40,8 @@ def load_prefixes(bot):
 def get_pre(bot, message):
 	if message.content.startswith('>'):
 		return '>'
+	if message.content.startswith(f'{bot.user.mention} '):
+		return f'{bot.user.mention} '
 	else:
 		try:
 			return bot.prefixes[message.guild.id]

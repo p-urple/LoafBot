@@ -179,7 +179,7 @@ async def on_guild_join(guild):
 				pass
 
 @bot.event
-async def on_guild_leave(guild):
+async def on_guild_remove(guild):
 	counter = 0
 	for i in bot.guilds:
 		counter += 1
@@ -290,16 +290,22 @@ async def on_raw_reaction_add(reaction, messageid, channelid, member):
 		cache.write(str(messageid) + '\n')
 		cache.close()
 		con.commit()
-		   
 
 @bot.event
 async def on_message_delete(message):
 	c = con.cursor()
 	if message.author.bot is True:
 		return
+	try:
+		for i in bot.messages:
+			if message.id == i.id:
+				return
+	except:
+		pass
+
 	channel = message.channel.name
 
-	mc = 'Deleted Message in #' + str(channel) + ':'
+	mc = f'Deleted Message in #{str(channel)}:'
 
 	em = discord.Embed(title=mc, description=message.content, colour=0xe74c3c)
 	em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
@@ -309,8 +315,6 @@ async def on_message_delete(message):
 	await send_modlogs(bot, message.guild, embed = em)
 
 	con.commit()
-
-
 
 @bot.event
 async def on_message_edit(message, after):

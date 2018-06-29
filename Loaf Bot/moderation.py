@@ -16,7 +16,7 @@ class Moderation:
 		if ctx.message.author == user:
 			await ctx.send("Why are you hitting yourself?")
 			return
-		await ctx.guild.kick(user)
+		await ctx.guild.kick(user, reason=reason)
 
 		title = f'{ctx.message.author.display_name} kicked {user.name} ({user.id})'
 		message = ''
@@ -37,15 +37,15 @@ class Moderation:
 		if ctx.message.author == user:
 			await ctx.send("Why are you hitting yourself?")
 			return
-		await ctx.guild.ban(user)
-		await ctx.guild.unban(user)
+		await ctx.guild.ban(user, reason=reason)
+		await ctx.guild.unban(user, reason=reason)
 
 		title = f'{ctx.message.author.display_name} softbanned {user.name} ({str(user.id)})'
 		message = ''
 		if reason != None:
 			message += f'\n{reason}'
 
-		em = discord.Embed(title=title, description=message, colour=0x004ac1)
+		em = discord.Embed(title=title, description=message, colour=0x2454a0)
 		em.set_author(name=user.display_name, icon_url=user.avatar_url)
 		await send_publiclogs(self.bot, ctx.guild, embed=em)
 
@@ -59,7 +59,7 @@ class Moderation:
 		if ctx.message.author == user:
 			await ctx.send("Why are you hitting yourself?")
 			return
-		await ctx.guild.ban(user)
+		await ctx.guild.ban(user, reason=reason)
 
 		title = f'{ctx.message.author.display_name} banned {user.name} ({str(user.id)})'
 		message = ''

@@ -4,6 +4,7 @@ import sqlite3
 import itertools
 import re
 import inspect
+import datetime
 from discord.ext import commands
 from utils import *
 
@@ -144,6 +145,8 @@ async def on_ready():
 
 	await modlogchannel.send(embed=em)
 
+	bot.start_time = datetime.datetime.now()
+
 @bot.event
 async def on_guild_join(guild):
 	sid = str(guild.id)
@@ -247,8 +250,8 @@ async def on_member_remove(member):
 	c = con.cursor()
 	uid = member.id
 	gid = member.guild.id
-	roles = [role.id for role in member.roles] 
-	many = [(uid, gid, role) for role in roles]
+	roles = [role.id for role in member.roles if role.name != '@everyone'] 
+	many = [(uid, gid, role) for role in roles if roles != []]
 	try:
 		c.executemany("INSERT INTO users VALUES (?, ?, ?)", many)
 	except:

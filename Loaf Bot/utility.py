@@ -1,5 +1,6 @@
 import discord
 import sqlite3
+import datetime
 from discord.ext import commands
 from utils import *
 class Utility:
@@ -37,7 +38,9 @@ class Utility:
 			message_limit = amount + 1
 			self.bot.messages = await ctx.message.channel.history(limit=message_limit).flatten()
 			await ctx.message.channel.purge(limit=message_limit, bulk=True)
-			await ctx.send(f':white_check_mark: **{str(amount)}** messages deleted')
+			message = await ctx.send(f':white_check_mark: **{str(amount)}** messages deleted')
+			await asyncio.sleep(5)
+			await message.delete()
 
 	@commands.command()
 	async def server(self, ctx):
@@ -48,7 +51,7 @@ class Utility:
 	async def invite(self, ctx):
 		"""sends the OAuth2 URL used for adding the bot to a server"""
 		oauth2 = 'https://discordapp.com/api/oauth2/authorize?client_id=430438798141423617&permissions=334883910&scope=bot'
-		await ctx.send('Add the bot to your server using {}'.format(oauth2))
+		await ctx.send(f'Add the bot to your server using {oauth2}')
 
 
 	@commands.command()
@@ -61,7 +64,9 @@ class Utility:
 			counter = 0
 			wrap = 0
 			for role in ctx.guild.roles:
-				if wrap < 21:
+				if role.name == '@everyone':
+					pass
+				elif wrap < 21:
 					rolelist += str(role.id)
 					rolelist += '	---   '
 					rolelist += role.name
@@ -127,6 +132,10 @@ class Utility:
 			await ctx.send(f'The custom prefix for this server is `{prefix}`')
 		except:
 			await ctx.send('The prefix for this server is `>`')
+	@commands.command()
+	async def uptime(self, ctx):
+		em = discord.Embed(title=f'Uptime for **{self.bot.user.name}**', description=str(timedelta_str(datetime.datetime.now() - self.bot.start_time)), colour=0x23272a)
+		await ctx.send(embed=em)
 
 def setup(bot):
     bot.add_cog(Utility(bot))

@@ -10,6 +10,7 @@ class Utility:
 	@commands.command()
 	@commands.is_owner()
 	async def servers(self, ctx):
+		"""a list of all the servers the bot is in"""
 		counter = 0
 		message = '```'
 		wrap = 0
@@ -122,6 +123,11 @@ class Utility:
 		"""shows current uptime"""
 		em = discord.Embed(title=f'Uptime for **{self.bot.user.name}**', description=str(timedelta_str(datetime.datetime.now() - self.bot.start_time)), colour=0x23272a)
 		await ctx.send(embed=em)
+
+	@commands.command()
+	async def upvote(self, ctx):
+		"""sends the link to upvote the bot on discordbots.org"""
+		await ctx.send('Upvote the server at https://discordbots.org/bot/430438798141423617')
 
 def setup(bot):
     bot.add_cog(Utility(bot))

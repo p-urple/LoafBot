@@ -16,7 +16,8 @@ class Logging:
 		if message.author.bot is True:
 			return
 		await asyncio.sleep(1)
-		if message.id in self.bot.message_ids:
+		if self.bot.messages > 0:
+			self.bot.messages -= 1
 			return
 			
 		channel = message.channel.name

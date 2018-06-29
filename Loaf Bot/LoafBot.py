@@ -171,6 +171,19 @@ async def cog_reload(ctx, *, cog: str):
 	bot.load_extension(cog)
 	await ctx.send(f'Reloaded the `{cog}` cog')
 
+@bot.event
+async def on_command_error(ctx,error):
+	if isinstance(error, commands.errors.MissingPermissions):
+		await ctx.send(':x: You do not have permission to use this command!')
+	elif isinstance(error, discord.Forbidden):
+		await ctx.send(':x: Error 403: You are forbidden from using that command!')
+	elif isinstance(error, commands.errors.MissingRequiredArgument):
+		await ctx.send(str(error) + " Use >help <command> to see all required arguments.")
+	elif isinstance(error, commands.errors.CommandNotFound):
+		return
+	else:
+		await ctx.send(error)
+	print(error)
 
 _mentions_transforms = {
     '@everyone': '@\u200beveryone',
@@ -233,5 +246,6 @@ async def help(ctx, *cmds : str):
 		em = discord.Embed(title = (", ".join(cmds) if len(cmds) != 0 else "Help"), description = page, colour=0x9b59b6)
 		em.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
 		await destination.send(embed = em)
-	
+
+
 bot.run(open('token.txt','r').read())

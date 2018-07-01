@@ -127,7 +127,7 @@ class Utility:
 	@commands.command()
 	async def upvote(self, ctx):
 		"""sends the link to upvote the bot on discordbots.org"""
-		await ctx.send('Upvote the server at https://discordbots.org/bot/430438798141423617')
+		await ctx.send('Upvote the bot at https://discordbots.org/bot/430438798141423617')
 
 def setup(bot):
     bot.add_cog(Utility(bot))

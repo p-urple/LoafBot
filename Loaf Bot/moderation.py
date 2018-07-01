@@ -37,6 +37,7 @@ class Moderation:
 		if ctx.message.author == user:
 			await ctx.send("Why are you hitting yourself?")
 			return
+		self.bot.banned = user.id
 		await ctx.guild.ban(user, reason=reason)
 		await ctx.guild.unban(user, reason=reason)
 
@@ -59,6 +60,7 @@ class Moderation:
 		if ctx.message.author == user:
 			await ctx.send("Why are you hitting yourself?")
 			return
+		self.bot.banned = user.id
 		await ctx.guild.ban(user, reason=reason)
 
 		title = f'{ctx.message.author.display_name} banned {user.name} ({str(user.id)})'

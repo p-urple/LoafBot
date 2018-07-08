@@ -19,11 +19,11 @@ class Logging:
 		try:
 			if self.bot.banned == message.author.id:
 				return
+			if self.bot.messages > 0:
+				self.bot.messages -= 1
+				return
 		except:
 			pass
-		if self.bot.messages > 0:
-			self.bot.messages -= 1
-			return
 			
 		channel = message.channel.name
 

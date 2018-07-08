@@ -16,8 +16,11 @@ class Logging:
 		if message.author.bot is True:
 			return
 		await asyncio.sleep(1)
-		if self.bot.banned == message.author.id:
-			return
+		try:
+			if self.bot.banned == message.author.id:
+				return
+		except:
+			pass
 		if self.bot.messages > 0:
 			self.bot.messages -= 1
 			return

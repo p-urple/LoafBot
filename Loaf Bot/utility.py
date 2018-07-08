@@ -8,6 +8,11 @@ class Utility:
 		self.bot = bot
 
 	@commands.command()
+	async def ping(self, ctx):
+		f"""returns the ping for **{self.bot.user.display_name}**"""
+		await ctx.send(f`{ctx.message.author.meniton} ***PONG!*** ({bot.latency * 1000:.of} milliseconds)')
+
+	@commands.command()
 	@commands.is_owner()
 	async def servers(self, ctx):
 		"""a list of all the servers the bot is in"""

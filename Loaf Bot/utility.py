@@ -10,7 +10,7 @@ class Utility:
 	@commands.command()
 	async def ping(self, ctx):
 		f"""returns the ping for **{self.bot.user.display_name}**"""
-		await ctx.send(f'{ctx.message.author.user.meniton} :ping_pong: ***PONG!*** ({bot.latency * 1000:.of} milliseconds)')
+		await ctx.send(f'<@{ctx.message.author.id}> :ping_pong: ***PONG!*** ({bot.latency * 1000:.of} milliseconds)')
 
 	@commands.command()
 	@commands.is_owner()

@@ -176,14 +176,16 @@ async def on_command_error(ctx,error):
 	if isinstance(error, commands.errors.MissingPermissions):
 		await ctx.send(':x: You do not have permission to use this command!')
 	elif isinstance(error, discord.Forbidden):
-		await ctx.send(':x: Error 403: You are forbidden from using that command!')
+		await ctx.send(f''':x: Error 403: You or the bot may be forbidden from using that command!
+			       For more information, join the support server using {get_pre}''')
 	elif isinstance(error, commands.errors.MissingRequiredArgument):
 		await ctx.send(str(error) + " Use >help <command> to see all required arguments.")
 	elif isinstance(error, commands.errors.CommandNotFound):
 		return
 	else:
-		await ctx.send(error)
-	print(error)
+		await ctx.send(f'{error}')
+	print(f'''In {ctx.guild.name} ({ctx.guild.id}):
+	{error})
 
 _mentions_transforms = {
     '@everyone': '@\u200beveryone',

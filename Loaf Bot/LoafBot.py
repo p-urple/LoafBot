@@ -185,7 +185,7 @@ async def on_command_error(ctx,error):
 	else:
 		await ctx.send(f'{error}')
 	print(f'''In {ctx.guild.name} ({ctx.guild.id}):
-	{error})
+	{error}''')
 
 _mentions_transforms = {
     '@everyone': '@\u200beveryone',

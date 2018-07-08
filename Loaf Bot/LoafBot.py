@@ -176,8 +176,7 @@ async def on_command_error(ctx,error):
 	if isinstance(error, commands.errors.MissingPermissions):
 		await ctx.send(':x: You do not have permission to use this command!')
 	elif isinstance(error, discord.Forbidden):
-		await ctx.send(f''':x: Error 403: You or the bot may be forbidden from using that command!
-			       For more information, join the support server using {get_pre}''')
+		await ctx.send(':x: Error 403: You or the bot may be forbidden from using that command!'
 	elif isinstance(error, commands.errors.MissingRequiredArgument):
 		await ctx.send(str(error) + " Use >help <command> to see all required arguments.")
 	elif isinstance(error, commands.errors.CommandNotFound):

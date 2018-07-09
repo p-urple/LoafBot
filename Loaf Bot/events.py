@@ -135,12 +135,17 @@ class Events:
 		await send_modlogs(self.bot, member.guild, embed = em)
 		con.commit()
 
-	async def on_raw_reaction_add(self, reaction, messageid, channelid, member):
+	async def on_raw_reaction_add(self, payload):
 		c = con.cursor()
+                channelid = payload.channel_id
+                messageid = payload.message_id
+                emoji = payload.emoji
+                member = payload.user_id
 		reactchannel = self.bot.get_channel(channelid)
 		message = await reactchannel.get_message(messageid)
 		if member == self.bot.user.id or message.author.bot == True:
 			return
+                reaction = discord.utils.get(message.reactions, name = emoji.name)
 		if reaction.count == 5 and reaction.name == '⭐' and str(messageid) not in open('bestof.txt').readlines():
 			print('bestof')
 			em = discord.Embed(title=':ok_hand: Nice :ok_hand:', description=message.content, colour=0xbc52ec)

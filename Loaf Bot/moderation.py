@@ -115,7 +115,7 @@ class Moderation:
 				await asyncio.sleep(t)
 				if role in user.roles:
 					await user.remove_roles(role)
-					await send_publiclogs(self.bot, ctx.guild, None, f'{user.mention} is no longer muted.')
+					await send_publiclogs(self.bot, ctx.guild, f'{user.mention} is no longer muted.')
 
 		else:
 			await ctx.send('Correct usage is: >mute <user> <time integer> <s/m/h/d> [reason]')
@@ -146,6 +146,11 @@ class Moderation:
 			self.bot.messages = await ctx.message.channel.history(limit=message_limit).flatten()
 			await ctx.message.channel.purge(limit=message_limit, bulk=True)
 			message = await ctx.send(f':white_check_mark: **{str(amount)}** messages deleted', delete_after=5)
+
+			em=discord.Embed(title=f'{amount} messages were purged in #{ctx.message.channel.name}', colour=0x878b91)
+			em.set_author(name=ctx.message.author.display_name, icon_url=ctx.message.author.avatar_url)
+
+			await send_modlogs(self.bot, ctx.guild, embed=em)
 
 def setup(bot):
 	bot.add_cog(Moderation(bot))

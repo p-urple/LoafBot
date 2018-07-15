@@ -11,7 +11,7 @@ class Events:
 		self.bot = bot
 
 
-	async def on_guild_join(guild):
+	async def on_guild_join(self, guild):
 		sid = str(guild.id)
 		c = con.cursor()
 		try:
@@ -44,7 +44,7 @@ class Events:
 				except:
 					pass
 
-	async def on_guild_remove(guild):
+	async def on_guild_remove(self, guild):
 		counter = 0
 		for i in self.bot.guilds:
 			counter += 1

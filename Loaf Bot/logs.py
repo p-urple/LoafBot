@@ -8,10 +8,6 @@ class Logging:
 		self.bot = bot
 
         
-	async def on_bulk_message_delete(self, payload):
-		self.bot.message_ids = payload.message_ids
-
-        
 	async def on_message_delete(self, message):
 		if message.author.bot is True:
 			return
@@ -19,8 +15,7 @@ class Logging:
 		try:
 			if self.bot.banned == message.author.id:
 				return
-			if self.bot.messages > 0:
-				self.bot.messages -= 1
+			if message.id in self.bot.messages:
 				return
 		except:
 			pass

@@ -11,7 +11,7 @@ class Config:
 
 	@commands.command()
 	@commands.has_permissions(manage_cahnnels=True)
-	async def reset(self, ctx)
+	async def reset(self, ctx):
 		"""used to reset configured settings"""
 		menu = await ctx.send(
 		'''```1. muterole

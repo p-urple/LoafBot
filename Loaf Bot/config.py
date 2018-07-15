@@ -24,10 +24,10 @@ class Config:
 		Respond with a number from the list, or 'exit' to close the menu.```'''
 		)
 
-		def check(self, user, setting):
-			return user == ctx.message.author and message.content in ['1', '2', '3', '4', '5', 'exit']
+		def check(message, user):
+			user == ctx.message.author and message.content == ['1', '2', '3', '4', '5', 'exit']
 		try:
-			user, setting = await self.bot.wait_for('message', timeout=30.0, check=check)
+			message, user = await self.bot.wait_for('message', timeout=30.0, check=check)
 		except asyncio.TimeoutError:
 			await ctx.send('Menu closed')
 		else:

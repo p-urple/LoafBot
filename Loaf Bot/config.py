@@ -14,7 +14,8 @@ class Config:
 	@commands.has_permissions(manage_channels=True)
 	async def reset(self, ctx):
 		"""used to reset configured settings"""
-		menu = await ctx.send('''```1. muterole
+		menu = await ctx.send('''```
+		1. muterole
 		2. modlog
 		3. publiclog
 		4. starboard
@@ -23,7 +24,7 @@ class Config:
 		Respond with a number from the list, or 'exit' to close the menu.```'''
 		)
 
-		def check(user, setting):
+		def check(self, user, setting):
 			return user == ctx.message.author and message.content in ['1', '2', '3', '4', '5', 'exit']
 		try:
 			user, setting = await self.bot.wait_for('message', timeout=30.0, check=check)

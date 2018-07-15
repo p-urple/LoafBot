@@ -10,6 +10,53 @@ class Config:
 		self.bot = bot
 
 	@commands.command()
+	@commands.has_permissions(manage_cahnnels=True)
+	async def reset(self, ctx)
+		"""used to reset configured settings"""
+		menu = await ctx.send(
+		'''```1. muterole
+		2. modlog
+		3. publiclog
+		4. starboard
+		5. all
+		
+		Respond with a number from the list, or 'exit' to close the menu.```'''
+		)
+
+		def check(user, setting):
+			return user == ctx.message.author and message.content in ['1', '2', '3', '4', '5', 'exit']
+		try:
+			user, setting = await self.bot.wait_for('message', timeout=30.0, check=check)
+		except asyncio.TimeoutError:
+			await ctx.send('Menu closed')
+		else:
+			c = con.cursor()
+			if message.content == 'exit':
+				await ctx.send('Menu closed.')
+				menu.delete()
+			elif message.content ==  '1':
+				c.execute("UPDATE guilds SET muterole=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+				await ctx.send('Reset the muterole')
+			elif message.content == '2':
+				c.execute("UPDATE guilds SET modlogs=(?) WEHRE guildid=(?)", (None, ctx.guild.id))
+				await ctx.send('Reset the modlog channel')
+			elif message.content == '3':
+				c.execute("UPDATE guilds SET publiclogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+				await ctx.send('Reset the publiclog channel')
+			elif message.content == '4':
+				c.execute("UPDATE guilds SET starboard=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+				await ctx.send('Reset the starboard channel')
+			elif message.content == '5':
+				c.execute("UPDATE guilds SET muterole=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+				c.execute("UPDATE guilds SET modlogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+				c.execute("UPDATE guilds SET publiclogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+				c.execute("UPDATE guilds SET starboard=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+				await ctx.send('Reset all settings')
+			con.commit()
+				
+		
+
+	@commands.command()
 	@commands.has_permissions(manage_channels=True)
 	async def muterole(self, ctx, *, rolename : discord.Role):
 		"""used to assign the role given to muted members -- *remember to use the exact role name*"""

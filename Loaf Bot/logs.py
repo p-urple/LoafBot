@@ -15,7 +15,7 @@ class Logging:
 		try:
 			if self.bot.banned == message.author.id:
 				return
-			if message.id == i.id for i in self.bot.messages:
+			if message.id in [i.id for i in self.bot.messages]:
 				return
 		except:
 			pass

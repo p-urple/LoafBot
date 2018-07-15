@@ -143,7 +143,7 @@ class Moderation:
 			await ctx.send('Just delete it yourself, silly')
 		else:
 			message_limit = amount + 1
-			self.bot.messages = message_limit
+			self.bot.messages = await ctx.message.channel.history(limit=message_limit).flatten()
 			await ctx.message.channel.purge(limit=message_limit, bulk=True)
 			message = await ctx.send(f':white_check_mark: **{str(amount)}** messages deleted', delete_after=5)
 

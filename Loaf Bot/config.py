@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import sqlite3
+import asyncio
 con = sqlite3.connect('discord.db')
 con.row_factory = sqlite3.Row
 
@@ -13,8 +14,7 @@ class Config:
 	@commands.has_permissions(manage_channels=True)
 	async def reset(self, ctx):
 		"""used to reset configured settings"""
-		menu = await ctx.send(
-		'''```1. muterole
+		menu = await ctx.send('''```1. muterole
 		2. modlog
 		3. publiclog
 		4. starboard

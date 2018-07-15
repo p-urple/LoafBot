@@ -18,9 +18,8 @@ class Logging:
 		except:
 			pass
 		try:
-			for i in self.bot.messages:
-				if i.id == message.id:
-					return
+			if message.if in self.bot.messages:
+				return
 		except:
 			pass
 			

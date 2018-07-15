@@ -10,7 +10,7 @@ class Config:
 		self.bot = bot
 
 	@commands.command()
-	@commands.has_permissions(manage_cahnnels=True)
+	@commands.has_permissions(manage_channels=True)
 	async def reset(self, ctx):
 		"""used to reset configured settings"""
 		menu = await ctx.send(

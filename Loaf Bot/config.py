@@ -26,33 +26,34 @@ Respond with a number from the list, or 'exit' to close the menu.```'''
 
 		def check(m):
 			m.content == '1' or m.content == '2' or m.content == '3' or m.content == '4' or m.content == '5' or m.content == '6' and m.channel == ctx.message.channel
-		try:
-			msg = await self.bot.wait_for('message', timeout=30.0, check=check)
-		except asyncio.TimeoutError:
-			await ctx.send('Menu closed')
-		else:
-			c = con.cursor()
-			if message.content == 'exit':
-				await ctx.send('Menu closed.')
-				menu.delete()
-			elif message.content ==  '1':
-				c.execute("UPDATE guilds SET muterole=(?) WHERE guildid=(?)", (None, ctx.guild.id))
-				await ctx.send('Reset the muterole')
-			elif message.content == '2':
-				c.execute("UPDATE guilds SET modlogs=(?) WEHRE guildid=(?)", (None, ctx.guild.id))
-				await ctx.send('Reset the modlog channel')
-			elif message.content == '3':
-				c.execute("UPDATE guilds SET publiclogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
-				await ctx.send('Reset the publiclog channel')
-			elif message.content == '4':
-				c.execute("UPDATE guilds SET starboard=(?) WHERE guildid=(?)", (None, ctx.guild.id))
-				await ctx.send('Reset the starboard channel')
-			elif message.content == '5':
-				c.execute("UPDATE guilds SET muterole=(?) WHERE guildid=(?)", (None, ctx.guild.id))
-				c.execute("UPDATE guilds SET modlogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
-				c.execute("UPDATE guilds SET publiclogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
-				c.execute("UPDATE guilds SET starboard=(?) WHERE guildid=(?)", (None, ctx.guild.id))
-				await ctx.send('Reset all settings')
+		msg = await self.bot.wait_for('message', timeout=30.0, check=check)
+		c = con.cursor()
+		if message.content == 'exit':
+			await ctx.send('Menu closed.')
+			menu.delete()
+		elif message.content ==  '1':
+			c.execute("UPDATE guilds SET muterole=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+			await ctx.send('Reset the muterole')
+			menu.delete()
+		elif message.content == '2':
+			c.execute("UPDATE guilds SET modlogs=(?) WEHRE guildid=(?)", (None, ctx.guild.id))
+			await ctx.send('Reset the modlog channel')
+			menu.delete()
+		elif message.content == '3':
+			c.execute("UPDATE guilds SET publiclogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+			await ctx.send('Reset the publiclog channel')
+			menu.delete()
+		elif message.content == '4':
+			c.execute("UPDATE guilds SET starboard=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+			await ctx.send('Reset the starboard channel')
+			menu.delete()
+		elif message.content == '5':
+			c.execute("UPDATE guilds SET muterole=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+			c.execute("UPDATE guilds SET modlogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+			c.execute("UPDATE guilds SET publiclogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+			c.execute("UPDATE guilds SET starboard=(?) WHERE guildid=(?)", (None, ctx.guild.id))
+			await ctx.send('Reset all settings')
+			menu.delete()
 			con.commit()
 				
 		

@@ -15,19 +15,19 @@ class Config:
 	async def reset(self, ctx):
 		"""used to reset configured settings"""
 		menu = await ctx.send('''```
-		1. muterole
-		2. modlog
-		3. publiclog
-		4. starboard
-		5. all
+1. muterole
+2. modlog
+3. publiclog
+4. starboard
+5. all
 		
-		Respond with a number from the list, or 'exit' to close the menu.```'''
+Respond with a number from the list, or 'exit' to close the menu.```'''
 		)
 
-		def check(message, user):
-			user == ctx.message.author and message.content == ['1', '2', '3', '4', '5', 'exit']
+		def check(user):
+			user == ctx.message.author
 		try:
-			message, user = await self.bot.wait_for('message', timeout=30.0, check=check)
+			user = await self.bot.wait_for('message', timeout=30.0, check=check)
 		except asyncio.TimeoutError:
 			await ctx.send('Menu closed')
 		else:

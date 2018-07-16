@@ -26,8 +26,12 @@ Respond with a number from the list, or 'exit' to close the menu.```'''
 
 		def check(m):
 			m.content == '1' or m.content == '2' or m.content == '3' or m.content == '4' or m.content == '5' or m.content == '6' and m.channel == ctx.message.channel
-		msg = await self.bot.wait_for('message', timeout=30.0, check=check)
 		try:
+			msg = await self.bot.wait_for('message', timeout=30.0, check=check)
+		except asyncio.TimeoutError:
+			menu.delete()
+			await ctx.send('Menu closed', delete_after=5)
+		else:
 			c = con.cursor()
 			if message.content == 'exit':
 				await ctx.send('Menu closed.')
@@ -56,9 +60,6 @@ Respond with a number from the list, or 'exit' to close the menu.```'''
 				await ctx.send('Reset all settings')
 				menu.delete()
 				con.commit()
-		except asyncio.TimeoutError:
-			menu.delete()
-			await ctx.send('Menu Closed', delete_after=5)
 		
 
 	@commands.command()

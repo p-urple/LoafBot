@@ -29,36 +29,36 @@ Respond with a number from the list, or 'exit' to close the menu.```'''
 		try:
 			msg = await self.bot.wait_for('message', timeout=30.0, check=check)
 		except asyncio.TimeoutError:
-			menu.delete()
+			await menu.delete()
 			await ctx.send('Menu closed', delete_after=5)
 		else:
 			c = con.cursor()
 			if message.content == 'exit':
 				await ctx.send('Menu closed.')
-				menu.delete()
+				await menu.delete()
 			elif message.content ==  '1':
 				c.execute("UPDATE guilds SET muterole=(?) WHERE guildid=(?)", (None, ctx.guild.id))
 				await ctx.send('Reset the muterole')
-				menu.delete()
+				await menu.delete()
 			elif message.content == '2':
 				c.execute("UPDATE guilds SET modlogs=(?) WEHRE guildid=(?)", (None, ctx.guild.id))
 				await ctx.send('Reset the modlog channel')
-				menu.delete()
+				await menu.delete()
 			elif message.content == '3':
 				c.execute("UPDATE guilds SET publiclogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
 				await ctx.send('Reset the publiclog channel')
-				menu.delete()
+				await menu.delete()
 			elif message.content == '4':
 				c.execute("UPDATE guilds SET starboard=(?) WHERE guildid=(?)", (None, ctx.guild.id))
 				await ctx.send('Reset the starboard channel')
-				menu.delete()
+				await menu.delete()
 			elif message.content == '5':
 				c.execute("UPDATE guilds SET muterole=(?) WHERE guildid=(?)", (None, ctx.guild.id))
 				c.execute("UPDATE guilds SET modlogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
 				c.execute("UPDATE guilds SET publiclogs=(?) WHERE guildid=(?)", (None, ctx.guild.id))
 				c.execute("UPDATE guilds SET starboard=(?) WHERE guildid=(?)", (None, ctx.guild.id))
 				await ctx.send('Reset all settings')
-				menu.delete()
+				await menu.delete()
 				con.commit()
 		
 

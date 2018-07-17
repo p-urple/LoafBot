@@ -62,9 +62,9 @@ def update_time(bot, guild, memberid):
 	time = datetime.datetime.now()
 	guild_times = dict()
 	try:
-		c.execute('SELECT count(1) FROM times WHERE id=(?) AND guildid=(?)', (memberid, guild.id))
-		exists = c.fetchone()[0]
-		if not exists:
+		try:
+			c.execute('UPDATE times SET time=(?) WHERE id=(?) AND guildid=(?)', (time, memberid, guild.id))
+		except:
 			c.execute('INSERT INTO times VALUES (?, ?, ?)', (guild.id, memberid, time))
 	except:
 		c.execute('''CREATE TABLE times

@@ -15,7 +15,7 @@ class Moderation:
 		if time == 'init':
 			for member in ctx.guild.members:
 				update_time(self.bot, ctx.guild, member.id)
-			await ctx.send("Set all server members' times to now")
+			await ctx.send("Set all server members' times to the current time")
 		else:
 
 			def isInt(string):

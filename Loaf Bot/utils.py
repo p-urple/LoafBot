@@ -60,10 +60,7 @@ def get_pre(bot, message):
 def update_time(bot, guild, memberid):
 	c = con.cursor()
 	time = datetime.datetime.now()
-	if bot.times is None:
-		bot.times = {}
-	if bot.times[guild.id] is None:
-		bot.times[guild.id] = {}
+	guild_times = dict()
 	try:
 		c.execute('SELECT count(1) FROM times WHERE id=(?) AND guildid=(?)', (memberid, guild.id))
 		exists = c.fetchone()[0]
@@ -79,8 +76,7 @@ def update_time(bot, guild, memberid):
 
 def get_times(bot, guild):
 	c = con.cursor()
-	guild_times = {}
-	bot.times = {}
+	guild_times = dict()
 	for member in guild.members:
 		c.execute("SELECT * FROM times WHERE id=? AND guildid=?", (member.id, guild.id))
 		row = c.fetchone()

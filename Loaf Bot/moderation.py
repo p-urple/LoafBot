@@ -15,8 +15,17 @@ class Moderation:
 		if time == 'init':
 			for member in ctx.guild.members:
 				update_time(self.bot, ctx.guild, member.id)
+			await ctx.send("Set all server members' times to now")
 		else:
-			try:
+
+			def isInt(string):
+				try:
+					int(string)
+					return True
+				except ValueError:
+					return False
+
+			if time.isInt():
 				weeks = int(time)
 				pruned = prune_members(self.bot, ctx, weeks)
 				for member in pruned:
@@ -27,7 +36,7 @@ class Moderation:
 						await member.dm_channel.send(f'You were kicked from {ctx.guild.name} due to inactivity')
 					except:
 						await ctx.send(f'Failed to prune {member.display_name}')
-			except:
+			else:
 				await ctx.send('Usage is `>prune <time in weeks>` or `>prune init` to restart/set the timer')
 				
 

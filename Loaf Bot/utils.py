@@ -32,6 +32,11 @@ async def send_starboard(bot, guild, *args, **kwargs):
 	if row['starboard'] is not None:
 		await bot.get_channel(row['starboard']).send(*args, **kwargs)
 
+def is_in_guild(guild_id):
+	async def predicate(ctx):
+		return ctx.guild and ctx.guild.id == guild_id
+	return commands.check(is_in_guild)
+
 def timedelta_str(dt):
 	days = dt.days
 	hours, r = divmod(dt.seconds, 3600)

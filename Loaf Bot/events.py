@@ -157,8 +157,7 @@ class Events:
 			con.commit()
 
 	async def on_message(self, message):
-		if message.guild.id == 468149044800389121:
-			update_time(message.author.id)
+		update_time(bot, message.guild, message.author.id)
 
 def setup(bot):
 	bot.add_cog(Events(bot))

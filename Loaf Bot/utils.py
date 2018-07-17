@@ -71,7 +71,7 @@ def update_time(bot, memberid):
 			c.execute('INSERT INTO times VALUES (?, ?)', (memberid, time)
 	except:
 		c.execute('''CREATE TABLE times
-			     (id integer, time datetime)''')
+		(id integer, time datetime)''')
 		c.execute('INSERT INTO times VALUES (?, ?)', (memberid, time))
 	con.commit()
 	bot.times[memberid] = time

@@ -84,7 +84,6 @@ def get_times(bot, guild):
 	bot.times[guild.id] = guild_times
 
 def prune_members(bot, ctx, weeks):
-	immune = discord.utils.get(ctx.guild.roles, id=468151084150554644)
 	time = datetime.datetime.now()
 	c = con.cursor()
 	bot.pruned = []

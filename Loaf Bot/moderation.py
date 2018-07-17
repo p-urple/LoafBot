@@ -25,7 +25,7 @@ class Moderation:
 				except ValueError:
 					return False
 
-			if time.isInt():
+			if isInt(time):
 				weeks = int(time)
 				pruned = prune_members(self.bot, ctx, weeks)
 				for member in pruned:

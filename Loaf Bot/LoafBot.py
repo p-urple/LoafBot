@@ -85,8 +85,7 @@ except:
 bot = commands.Bot(command_prefix=get_pre, formatter = EmbedHelp())
 bot.message_ids = []
 bot.prefixes = dict()
-for guild in bot.guilds:
-	get_times(bot, guild)
+bot.times = dict()
 load_prefixes(bot)
 
 bot.remove_command("help")

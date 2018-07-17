@@ -1,6 +1,7 @@
 import discord
 import asyncio
 import sqlite3
+import datetime
 from discord.ext import commands
 
 con = sqlite3.connect('discord.db')

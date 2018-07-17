@@ -1,10 +1,30 @@
 import discord
 from discord.ext import commands
+import datetime
 import asyncio
 from utils import *
 class Moderation:
 	def __init__(self, bot):
 		self.bot = bot
+
+
+	@commands.command()
+	@is_in_guild(468149044800389121)
+	@commands.has_permissions(kick_members=True)
+	async def prune(self, ctx, time):
+		"""kicks inactive users"""
+		if time == 'init':
+			for member in ctx.guild.members:
+				update_time(self.bot, member.id)
+			get_times(self.bot, ctx.guild)
+		else:
+			try:
+				weeks = int(time)
+				prune_members(self.bot, ctx, weeks)
+			except:
+				await ctx.send('Usage is `>prune <time in weeks>` or `>prune init` to restart/set the timer')
+			
+				
 
 	@commands.command()
 	@commands.has_permissions(kick_members=True)

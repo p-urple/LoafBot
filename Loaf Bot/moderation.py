@@ -10,14 +10,14 @@ class Moderation:
 
 	@commands.command()
 	@commands.has_permissions(kick_members=True)
-	async def prune(self, ctx, time):
+	async def prune(self, ctx, time = None):
 		"""kicks inactive users"""
 		if time == 'init':
 			for member in ctx.guild.members:
 				update_time(self.bot, ctx.guild, member.id)
 			get_times(self.bot, ctx.guild)
 		else:
-			if time is None or if time.int() is False:
+			if time is None:
 				await ctx.send('Usage is `>prune <time in weeks>` or `>prune init` to restart/set the timer')
 			else:
 				weeks = int(time)
@@ -166,7 +166,7 @@ class Moderation:
 		"""purges the specified amount of messages in the channel it is used"""
 		if amount is None:
 			await ctx.send('Please give an amount')
-		if amount == 1:
+		elif amount == 1:
 			await ctx.send('Just delete it yourself, silly')
 		else:
 			message_limit = amount + 1

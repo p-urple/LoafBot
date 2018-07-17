@@ -68,11 +68,11 @@ def update_time(bot, memberid):
 		c.execute('SELECT count(1) FROM times WHERE id=(?)', (memberid,))
 		exists = c.fetchone()[0]
 		if not exists:
-			c.execute('INSERT INTO times VALUES (?, ?)', (memberid, time)
+			c.execute('INSERT INTO times VALUES (?, ?)', (memberid, time))
 	except:
-		c.execute('''CREATE TABLE times
-		(id integer, time datetime)''')
-		c.execute('INSERT INTO times VALUES (?, ?)', (memberid, time))
+		c.execute('''CREATE TABLE guilds
+			     (id integer, time datetime)''')
+		c.execute('INSERT INTO guilds VALUES (?, ?)', (memberid, time))
 	con.commit()
 	bot.times[memberid] = time
 

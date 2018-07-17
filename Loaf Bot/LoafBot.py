@@ -85,7 +85,6 @@ except:
 bot = commands.Bot(command_prefix=get_pre, formatter = EmbedHelp())
 bot.message_ids = []
 bot.prefixes = dict()
-bot.times = dict()
 load_prefixes(bot)
 
 bot.remove_command("help")

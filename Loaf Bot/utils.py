@@ -67,7 +67,7 @@ def update_time(bot, guild, memberid):
 	except:
 		c.execute('''CREATE TABLE guilds
 			     (guildid integer, id integer, time datetime)''')
-		c.execute('INSERT INTO guilds VALUES (?, ?, ?)', (guild.id memberid, time))
+		c.execute('INSERT INTO guilds VALUES (?, ?, ?)', (guild.id, memberid, time))
 	con.commit()
 	guild_times[memberid] = time
 	bot.times[guild.id] = guild_times

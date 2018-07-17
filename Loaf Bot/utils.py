@@ -78,7 +78,7 @@ def prune_members(bot, ctx, weeks):
 	for member in ctx.guild.members:
 		c.execute("SELECT * FROM times WHERE id=? AND guildid=?", (member.id, ctx.guild.id))
 		row = c.fetchone()
-		if datetime.strptime(row['time'], '%m/%d/%Y %I:%M:%S %p') + datetime.timedelta(weeks=weeks) >= time:
+		if datetime.datetime.strptime(row['time'], '%m/%d/%Y %I:%M:%S %p') + datetime.timedelta(weeks=weeks) >= time:
 			pass
 		else:
 			c.execute("DELETE * FROM times WHERE id=? AND guildid=?", (member.id, ctx.guild.id))

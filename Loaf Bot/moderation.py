@@ -17,7 +17,9 @@ class Moderation:
 				update_time(self.bot, ctx.guild, member.id)
 			get_times(self.bot, ctx.guild)
 		else:
-			try:
+			if time is None or if time.int() is False:
+				await ctx.send('Usage is `>prune <time in weeks>` or `>prune init` to restart/set the timer')
+			else:
 				weeks = int(time)
 				prune_members(self.bot, ctx, weeks)
 				for member in self.bot.pruned:
@@ -28,9 +30,7 @@ class Moderation:
 						await member.dm_channel.send(f'You were kicked from {ctx.guild.name} due to inactivity')
 					except:
 						pass
-			except:
-				await ctx.send('Usage is `>prune <time in weeks>` or `>prune init` to restart/set the timer')
-			
+
 				
 
 	@commands.command()

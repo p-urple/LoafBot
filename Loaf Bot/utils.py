@@ -75,6 +75,8 @@ def update_time(bot, guild, memberid):
 
 def get_times(bot, guild):
 	c = con.cursor()
+	guild_times = {}
+	bot.times = {}
 	for member in guild.members:
 		c.execute("SELECT * FROM times WHERE id=? AND guildid=?", (member.id, guild.id))
 		row = c.fetchone()

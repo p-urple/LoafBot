@@ -32,11 +32,6 @@ async def send_starboard(bot, guild, *args, **kwargs):
 	if row['starboard'] is not None:
 		await bot.get_channel(row['starboard']).send(*args, **kwargs)
 
-def is_in_guild(guild_id):
-	async def predicate(ctx):
-		return ctx.guild and ctx.guild.id == guild_id
-	return commands.check(is_in_guild)
-
 def timedelta_str(dt):
 	days = dt.days
 	hours, r = divmod(dt.seconds, 3600)
@@ -61,27 +56,29 @@ def get_pre(bot, message):
 		except:
 			return '>'
 
-def update_time(bot, memberid):
+def update_time(bot, guild, memberid):
 	c = con.cursor()
 	time = datetime.datetime.now()
 	try:
-		c.execute('SELECT count(1) FROM times WHERE id=(?)', (memberid,))
+		c.execute('SELECT count(1) FROM times WHERE id=(?) AND guildid=(?)', (memberid, guild.id))
 		exists = c.fetchone()[0]
 		if not exists:
-			c.execute('INSERT INTO times VALUES (?, ?)', (memberid, time))
+			c.execute('INSERT INTO times VALUES (?, ?, ?)', (guild.id, memberid, time))
 	except:
 		c.execute('''CREATE TABLE guilds
-			     (id integer, time datetime)''')
-		c.execute('INSERT INTO guilds VALUES (?, ?)', (memberid, time))
+			     (guildid integer, id integer, time datetime)''')
+		c.execute('INSERT INTO guilds VALUES (?, ?, ?)', (guild.id memberid, time))
 	con.commit()
-	bot.times[memberid] = time
+	guild_times[memberid] = time
+	bot.times[guild.id] = guild_times
 
 def get_times(bot, guild):
 	c = con.cursor()
 	for member in guild.members:
-		c.execute("SELECT * FROM times WHERE id=?", (member.id))
+		c.execute("SELECT * FROM times WHERE id=? AND guildid=?", (member.id, guild.id))
 		row = c.fetchone()
-		bot.times[member.id] = row['time']
+		guild_times[member.id] = row['time']
+	bot.times[guild.id] = guild_times
 
 def prune_members(bot, ctx, weeks):
 	immune = discord.utils.get(ctx.guild.roles, id=468151084150554644)
@@ -95,7 +92,7 @@ def prune_members(bot, ctx, weeks):
 			if bot.times[member.id] + timedelta(weeks=weeks) >= time:
 				pass
 			else:
-				c.execute("DELETE * FROM times WHERE id=?", (member.id,))
+				c.execute("DELETE * FROM times WHERE id=? AND guildid=?", (member.id, ctx.guild.id))
 				bot.pruned.append(member)
 
 def get_muterole(guild):

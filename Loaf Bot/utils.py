@@ -60,7 +60,46 @@ def get_pre(bot, message):
 			return bot.prefixes[message.guild.id]
 		except:
 			return '>'
-		
+
+def update_time(bot, memberid):
+	c = con.cursor()
+	time = datetime.datetime.now()
+	try:
+		c.execute('SELECT count(1) FROM times WHERE id=(?)', (memberid,))
+		exists = c.fetchone()[0]
+		if not exists:
+			c.execute('INSERT INTO times VALUES (?, ?)', (memberid, time)
+	except:
+		c.execute('''CREATE TABLE times
+			     (id integer, time datetime)''')
+		c.execute('INSERT INTO times VALUES (?, ?)', (memberid, time))
+	con.commit()
+	bot.times[memberid] = time
+
+def get_times(bot, guild):
+	c = con.cursor()
+	for member in guild.members:
+		c.execute("SELECT * FROM times WHERE id=?", (member.id))
+		row = c.fetchone()
+		bot.times[member.id] = row['time']
+
+def prune_members(bot, ctx, weeks):
+	immune = discord.utils.get(ctx.guild.roles, id=468151084150554644)
+	time = datetime.datetime.now()
+	c = con.cursor()
+	for member in ctx.guild.members:
+		if immune in member.roles:
+			pass
+		else:
+			if bot.times[member.id] + timedelta(weeks=weeks) >= time:
+				pass
+			else:
+				await ctx.guild.kick(member, reason='Pruned due to inactivity')
+				await ctx.send(f'Pruned {member.display_name} due to inactivity')
+				c.execute("DELETE * FROM times WHERE id=?", (member.id,))
+				await member.create_dm()
+				await member.dm_channel.send(f'You were kicked from {ctx.guild.name} due to inactivity')
+
 def get_muterole(guild):
 	c = con.cursor()
 	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))

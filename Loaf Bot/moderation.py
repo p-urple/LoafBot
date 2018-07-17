@@ -9,7 +9,6 @@ class Moderation:
 
 
 	@commands.command()
-	@is_in_guild(468149044800389121)
 	@commands.has_permissions(kick_members=True)
 	async def prune(self, ctx, time):
 		"""kicks inactive users"""

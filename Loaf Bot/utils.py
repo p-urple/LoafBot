@@ -83,7 +83,8 @@ def prune_members(bot, ctx, weeks):
 		else:
 			c.execute("DELETE * FROM times WHERE id=? AND guildid=?", (member.id, ctx.guild.id))
 			pruned.append(member)
-		return pruned
+			con.commit()
+			return pruned
 
 def get_muterole(guild):
 	c = con.cursor()

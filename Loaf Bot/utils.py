@@ -60,7 +60,6 @@ def get_pre(bot, message):
 def update_time(bot, guild, memberid):
 	c = con.cursor()
 	time = datetime.datetime.now()
-	guild_times = dict()
 	try:
 		try:
 			c.execute('UPDATE times SET time=(?) WHERE id=(?) AND guildid=(?)', (time, memberid, guild.id))
@@ -71,28 +70,20 @@ def update_time(bot, guild, memberid):
 			     (guildid integer, id integer, time datetime)''')
 		c.execute('INSERT INTO guilds VALUES (?, ?, ?)', (guild.id, memberid, time))
 	con.commit()
-	guild_times[memberid] = time
-	bot.times[guild.id] = guild_times
-
-def get_times(bot, guild):
-	c = con.cursor()
-	guild_times = dict()
-	for member in guild.members:
-		c.execute("SELECT * FROM times WHERE id=? AND guildid=?", (member.id, guild.id))
-		row = c.fetchone()
-		guild_times[member.id] = row['time']
-	bot.times[guild.id] = guild_times
 
 def prune_members(bot, ctx, weeks):
 	time = datetime.datetime.now()
 	c = con.cursor()
-	bot.pruned = []
+	pruned = []
 	for member in ctx.guild.members:
-		if bot.times[member.id] + timedelta(weeks=weeks) >= time:
+		c.execute("SELECT * FROM times WHERE id=? AND guildid=?", (member.id, ctx.guild.id))
+		row = c.fetchone()
+		if row['time'] + timedelta(weeks=weeks) >= time:
 			pass
 		else:
 			c.execute("DELETE * FROM times WHERE id=? AND guildid=?", (member.id, ctx.guild.id))
-			bot.pruned.append(member)
+			pruned.append(member)
+		return pruned
 
 def get_muterole(guild):
 	c = con.cursor()

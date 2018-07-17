@@ -21,6 +21,11 @@ class Moderation:
 			try:
 				weeks = int(time)
 				prune_members(self.bot, ctx, weeks)
+				for member in self.bot.pruned:
+					await ctx.guild.kick(member, reason='Pruned due to inactivity')
+					await ctx.send(f'Pruned {member.display_name} due to inactivity')
+					await member.create_dm()
+					await member.dm_channel.send(f'You were kicked from {ctx.guild.name} due to inactivity')
 			except:
 				await ctx.send('Usage is `>prune <time in weeks>` or `>prune init` to restart/set the timer')
 			

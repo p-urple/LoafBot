@@ -87,6 +87,7 @@ def prune_members(bot, ctx, weeks):
 	immune = discord.utils.get(ctx.guild.roles, id=468151084150554644)
 	time = datetime.datetime.now()
 	c = con.cursor()
+	bot.pruned = []
 	for member in ctx.guild.members:
 		if immune in member.roles:
 			pass
@@ -94,11 +95,8 @@ def prune_members(bot, ctx, weeks):
 			if bot.times[member.id] + timedelta(weeks=weeks) >= time:
 				pass
 			else:
-				await ctx.guild.kick(member, reason='Pruned due to inactivity')
-				await ctx.send(f'Pruned {member.display_name} due to inactivity')
 				c.execute("DELETE * FROM times WHERE id=?", (member.id,))
-				await member.create_dm()
-				await member.dm_channel.send(f'You were kicked from {ctx.guild.name} due to inactivity')
+				bot.pruned.append(member)
 
 def get_muterole(guild):
 	c = con.cursor()

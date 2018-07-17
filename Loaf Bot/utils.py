@@ -60,6 +60,10 @@ def get_pre(bot, message):
 def update_time(bot, guild, memberid):
 	c = con.cursor()
 	time = datetime.datetime.now()
+	if bot.times is None:
+		bot.times = {}
+	if bot.times[guild.id] is None:
+		bot.times[guild.id] = {}
 	try:
 		c.execute('SELECT count(1) FROM times WHERE id=(?) AND guildid=(?)', (memberid, guild.id))
 		exists = c.fetchone()[0]

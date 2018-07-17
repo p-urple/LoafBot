@@ -88,14 +88,11 @@ def prune_members(bot, ctx, weeks):
 	c = con.cursor()
 	bot.pruned = []
 	for member in ctx.guild.members:
-		if immune in member.roles:
+		if bot.times[member.id] + timedelta(weeks=weeks) >= time:
 			pass
 		else:
-			if bot.times[member.id] + timedelta(weeks=weeks) >= time:
-				pass
-			else:
-				c.execute("DELETE * FROM times WHERE id=? AND guildid=?", (member.id, ctx.guild.id))
-				bot.pruned.append(member)
+			c.execute("DELETE * FROM times WHERE id=? AND guildid=?", (member.id, ctx.guild.id))
+			bot.pruned.append(member)
 
 def get_muterole(guild):
 	c = con.cursor()

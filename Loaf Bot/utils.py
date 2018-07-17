@@ -66,7 +66,7 @@ def update_time(bot, guild, memberid):
 		if not exists:
 			c.execute('INSERT INTO times VALUES (?, ?, ?)', (guild.id, memberid, time))
 	except:
-		c.execute('''CREATE TABLE guilds
+		c.execute('''CREATE TABLE times
 			     (guildid integer, id integer, time datetime)''')
 		c.execute('INSERT INTO guilds VALUES (?, ?, ?)', (guild.id, memberid, time))
 	con.commit()

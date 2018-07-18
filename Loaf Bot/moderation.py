@@ -5,40 +5,7 @@ import asyncio
 from utils import *
 class Moderation:
 	def __init__(self, bot):
-		self.bot = bot
-
-
-	@commands.command()
-	@commands.has_permissions(kick_members=True)
-	async def prune(self, ctx, time = None):
-		"""kicks inactive users"""
-		if time == 'init':
-			for member in ctx.guild.members:
-				update_time(self.bot, ctx.guild, member.id)
-			await ctx.send("Set all server members' times to the current time")
-		else:
-
-			def isInt(string):
-				try:
-					int(string)
-					return True
-				except ValueError:
-					return False
-
-			if isInt(time):
-				weeks = int(time)
-				pruned = prune_members(self.bot, ctx, weeks)
-				for member in pruned:
-					try:
-						await ctx.guild.kick(member, reason='Pruned due to inactivity')
-						await ctx.send(f'Pruned {member.display_name} due to inactivity')
-						await member.create_dm()
-						await member.dm_channel.send(f'You were kicked from {ctx.guild.name} due to inactivity')
-					except:
-						await ctx.send(f'Failed to prune {member.display_name}')
-			else:
-				await ctx.send('Usage is `>prune <time in weeks>` or `>prune init` to restart/set the timer')
-				
+		self.bot = bot				
 
 	@commands.command()
 	@commands.has_permissions(kick_members=True)

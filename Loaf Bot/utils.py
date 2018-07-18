@@ -57,35 +57,6 @@ def get_pre(bot, message):
 		except:
 			return '>'
 
-def update_time(bot, guild, memberid):
-	c = con.cursor()
-	time = datetime.datetime.now()
-	try:
-		try:
-			c.execute('UPDATE times SET time=(?) WHERE id=(?) AND guildid=(?)', (time, memberid, guild.id))
-		except:
-			c.execute('INSERT INTO times VALUES (?, ?, ?)', (guild.id, memberid, time))
-	except:
-		c.execute('''CREATE TABLE times
-			     (guildid integer, id integer, time integer)''')
-		c.execute('INSERT INTO guilds VALUES (?, ?, ?)', (guild.id, memberid, time))
-	con.commit()
-
-def prune_members(bot, ctx, weeks):
-	time = datetime.datetime.now()
-	c = con.cursor()
-	pruned = []
-	for member in ctx.guild.members:
-		c.execute("SELECT * FROM times WHERE id=? AND guildid=?", (member.id, ctx.guild.id))
-		row = c.fetchone()
-		if datetime.datetime.strptime(row['time'], '%m/%d/%Y %I:%M:%S %p') + datetime.timedelta(weeks=weeks) >= time:
-			pass
-		else:
-			c.execute("DELETE * FROM times WHERE id=? AND guildid=?", (member.id, ctx.guild.id))
-			pruned.append(member)
-			con.commit()
-			return pruned
-
 def get_muterole(guild):
 	c = con.cursor()
 	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))

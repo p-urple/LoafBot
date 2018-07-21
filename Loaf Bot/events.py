@@ -156,9 +156,6 @@ class Events:
 			cache.write(str(messageid) + '\n')
 			cache.close()
 			con.commit()
-			
-	async def on_message(self, message):
-		print(f'{message.id} -- {message.author.name} -- {message.guild.name}\n')
 
 def setup(bot):
 	bot.add_cog(Events(bot))

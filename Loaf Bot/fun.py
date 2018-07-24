@@ -63,12 +63,13 @@ class Fun:
 		"""rolls some die (6d20+3)"""
 		regex = re.search(r'(\d*)d(\d+)\+?(\d*)', amount)
 		number = int(regex.group(1)) if regex.group(1) != '' else 1
+		if number > 1000:
+			await ctx.send("Please dont roll more than 1000 die! The message will exceed character limit.")
+			return
 		dicedenom = int(regex.group(2))
 		addend = int(regex.group(3)) if regex.group(3) != '' else 0
 		rolls = [random.randint(1,dicedenom) for i in range(number)]
 		rollsmesg = '(' + ' + '.join([str(i) for i in rolls]) + ')' + ((' + ' + str(addend)) if addend != 0 else '') + ' = '
-		if rolls > 1000:
-			await ctx.send('Please dont roll more than 1000 die! Bots have limits too, I either will be unable to send it or crash.')
 		await ctx.send(rollsmesg + str(sum(rolls)+addend))
 
 def setup(bot):

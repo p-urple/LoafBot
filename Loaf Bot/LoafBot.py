@@ -118,6 +118,7 @@ if __name__ == '__main__':
 	for extension in startup_extensions:
 		try:
 			bot.load_extension(extension)
+			print(f'Loaded extension {extension}.')
 		except Exception as e:
 			print(f'Failed to load extension {extension}.')
 			print(e)

@@ -149,8 +149,13 @@ class Events:
 		for x in message.reactions:
 			if str(x.emoji) == '⭐':
 				reaction = x
-		c.execute('SELECT count(1) FROM starred WHERE id=(?)', (message.id,))
-		exists = c.fetchone()[0]
+		try:
+			c.execute('SELECT count(1) FROM starred WHERE id=(?)', (message.id,))
+			exists = c.fetchone()[0]
+		except:
+				c.execute('''CREATE TABLE starred
+				(id,)''')
+				return
 		if reaction.count >= 5 and str(messageid) and not exists:
 			print(str(message.id))
 			em = discord.Embed(title=':ok_hand: Nice :ok_hand:', description=message.content, colour=0xbc52ec)

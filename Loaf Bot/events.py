@@ -162,7 +162,7 @@ class Events:
 			await send_starboard(self.bot, message.guild, embed = em)
 			try:
 				c.execute("INSERT INTO starred VALUES (?, ?)", (message.guild.id, messageid))
-			con.commit()
+		con.commit()
 
 def setup(bot):
 	bot.add_cog(Events(bot))

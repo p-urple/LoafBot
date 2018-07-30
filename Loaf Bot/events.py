@@ -161,10 +161,6 @@ class Events:
 			set_embed_image_to_message_image(em,message)	
 			await send_starboard(self.bot, message.guild, embed = em)
 			try:
-				c.execut("INSERT INTO starred VALUES (?, ?)", (message.guild.id, messageid))
-			except:
-				c.execute('''CREATE TABLE starred
-				(gid, id)''')
 				c.execute("INSERT INTO starred VALUES (?, ?)", (message.guild.id, messageid))
 			con.commit()
 

@@ -147,7 +147,7 @@ class Events:
 		if member == self.bot.user.id or message.author.bot == True:
 			return
 		for x in message.reactions:
-			if str(x.emoji) == '⭐'
+			if str(x.emoji) == '⭐':
 				reaction = x
 		if reaction.count >= 5 and str(messageid) not in open('bestof.txt').readlines():
 			print(str(message.id))

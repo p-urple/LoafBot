@@ -146,6 +146,7 @@ class Events:
 		message = await reactchannel.get_message(messageid)
 		if member == self.bot.user.id or message.author.bot == True:
 			return
+		reaction = None
 		for x in message.reactions:
 			if str(x.emoji) == '⭐':
 				reaction = x

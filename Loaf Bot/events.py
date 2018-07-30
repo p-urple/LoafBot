@@ -154,7 +154,7 @@ class Events:
 			exists = c.fetchone()[0]
 		except:
 				c.execute('''CREATE TABLE starred
-				(gid, id''')
+				(gid, id)''')
 				return
 		if reaction.count >= 5 and str(messageid) and not exists:
 			print(str(message.id))

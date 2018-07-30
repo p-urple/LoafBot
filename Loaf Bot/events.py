@@ -148,7 +148,7 @@ class Events:
 			return
 		for x in message.reactions:
 			if str(x.emoji) == '⭐'
-			reaction = x
+				reaction = x
 		if reaction.count >= 5 and str(messageid) not in open('bestof.txt').readlines():
 			print(str(message.id))
 			em = discord.Embed(title=':ok_hand: Nice :ok_hand:', description=message.content, colour=0xbc52ec)

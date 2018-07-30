@@ -160,8 +160,7 @@ class Events:
 			em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
 			set_embed_image_to_message_image(em,message)	
 			await send_starboard(self.bot, message.guild, embed = em)
-			try:
-				c.execute("INSERT INTO starred VALUES (?, ?)", (message.guild.id, messageid))
+			c.execute("INSERT INTO starred VALUES (?, ?)", (message.guild.id, messageid))
 		con.commit()
 
 def setup(bot):

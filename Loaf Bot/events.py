@@ -146,9 +146,15 @@ class Events:
 		message = await reactchannel.get_message(messageid)
 		if member == self.bot.user.id or message.author.bot == True:
 			return
-		reaction = next(filter(lambda x: x.emoji == '⭐', message.reactions))
-		if reaction.count >= 5 and reaction.emoji == '⭐' and str(messageid) not in open('bestof.txt').readlines():
-			em = discord.Embed(title=':ok_hand: Nice :ok_hand:', description=message.content, colour=0xbc52ec)
+		try:
+			reaction = next(filter(lambda x: x.emoji == '⭐', message.reactions))
+		except:
+			pass
+		if str(messageid) in open('bestof.txt').readlines():
+			return
+		if reaction.count >= 5 and reaction.emoji == '⭐':
+			print(str(messageid))
+			em = discord.Embed(title='Starred Message:', description=message.content, colour=0xbc52ec)
 			em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
 			set_embed_image_to_message_image(em,message)	
 			await send_starboard(self.bot, message.guild, embed = em)

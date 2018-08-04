@@ -150,19 +150,20 @@ class Events:
 		for x in message.reactions:
 			if str(x.emoji) == '⭐':
 				reaction = x
-		try:
-			c.execute('SELECT count(1) FROM starred WHERE id=(?)', (message.id,))
-			exists = c.fetchone()[0]
-		except:
-				return
-		if reaction.count >= 5 and str(messageid) and not exists:
-			print(str(message.id))
-			em = discord.Embed(title=':ok_hand: Nice :ok_hand:', description=message.content, colour=0xbc52ec)
-			em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
-			set_embed_image_to_message_image(em,message)	
-			await send_starboard(self.bot, message.guild, embed = em)
-			c.execute("INSERT INTO starred VALUES (?, ?)", (message.guild.id, messageid))
-		con.commit()
+		if reaction is not None:
+			try:
+				c.execute('SELECT count(1) FROM starred WHERE id=(?)', (message.id,))
+				exists = c.fetchone()[0]
+			except:
+					return
+			if reaction.count >= 5 and str(messageid) and not exists:
+				print(str(message.id))
+				em = discord.Embed(title=':ok_hand: Nice :ok_hand:', description=message.content, colour=0xbc52ec)
+				em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
+				set_embed_image_to_message_image(em,message)	
+				await send_starboard(self.bot, message.guild, embed = em)
+				c.execute("INSERT INTO starred VALUES (?, ?)", (message.guild.id, messageid))
+			con.commit()
 
 def setup(bot):
 	bot.add_cog(Events(bot))

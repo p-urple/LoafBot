@@ -11,27 +11,36 @@ def __init__(self, bot):
 	self.bot = bot
 
 async def send_modlogs(bot, guild, *args, **kwargs):
-	c = con.cursor()
-	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
-	row = c.fetchone()
-	if row['modlogs'] is not None:
-		await bot.get_channel(row['modlogs']).send(*args, **kwargs)
+	try:
+		c = con.cursor()
+		c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
+		row = c.fetchone()
+		if row['modlogs'] is not None:
+			await bot.get_channel(row['modlogs']).send(*args, **kwargs)
+	except:
+		pass
 
 async def send_publiclogs(bot, guild, *args, **kwargs):
-	c = con.cursor()
-	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
-	row = c.fetchone()
-	if row['modlogs'] is not None:
-		await bot.get_channel(row['modlogs']).send(*args, **kwargs)
-	if row['publiclogs'] is not None:
-		await bot.get_channel(row['publiclogs']).send(*args, **kwargs)
+	try:
+		c = con.cursor()
+		c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
+		row = c.fetchone()
+		if row['modlogs'] is not None:
+			await bot.get_channel(row['modlogs']).send(*args, **kwargs)
+		if row['publiclogs'] is not None:
+			await bot.get_channel(row['publiclogs']).send(*args, **kwargs)
+	except:
+		pass
 
 async def send_starboard(bot, guild, *args, **kwargs):
-	c = con.cursor()
-	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
-	row = c.fetchone()
-	if row['starboard'] is not None:
-		await bot.get_channel(row['starboard']).send(*args, **kwargs)
+	try:
+		c = con.cursor()
+		c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
+		row = c.fetchone()
+		if row['starboard'] is not None:
+			await bot.get_channel(row['starboard']).send(*args, **kwargs)
+	except:
+		pass
 
 def timedelta_str(dt):
 	days = dt.days

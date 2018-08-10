@@ -145,10 +145,10 @@ class Events:
 		emoji = payload.emoji
 		member = payload.user_id
 		reactchannel = self.bot.get_channel(channelid)
-                try:
-                        message = await reactchannel.get_message(messageid)
-                except:
-                        print(f'Message {messageid} not found')
+		try:
+			message = await reactchannel.get_message(messageid)
+		except:
+			print(f'Message {messageid} not found')
 		reaction = None
 		for x in message.reactions:
 			if str(x.emoji) == '⭐':

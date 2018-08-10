@@ -155,6 +155,7 @@ async def cog_load(ctx, *, cog: str):
 	"""loads a module."""
 	bot.load_extension(cog)
 	await ctx.send(f'Loaded the `{cog}` cog')
+	print(f'Loaded extenstion {cog}')
 
 @bot.command(name='unload', hidden=True)
 @commands.is_owner()
@@ -162,6 +163,7 @@ async def cog_unload(ctx, *, cog: str):
 	"""unloads a module."""
 	bot.unload_extension(cog)
 	await ctx.send(f'Unloaded the `{cog}` cog')
+	print(f'Unloaded extension {cog}')
 
 @bot.command(name='reload', hidden=True)
 @commands.is_owner()
@@ -170,6 +172,7 @@ async def cog_reload(ctx, *, cog: str):
 	bot.unload_extension(cog)
 	bot.load_extension(cog)
 	await ctx.send(f'Reloaded the `{cog}` cog')
+	print(f'Reloaded extension {cog}')
 
 @bot.event
 async def on_command_error(ctx,error):

@@ -137,18 +137,19 @@ class Events:
 		con.commit()
 
 	async def on_raw_reaction_add(self, payload):
-		member = payload.user_id
 		if member == self.bot.user.id or message.author.bot == True:
 			return
 		c = con.cursor()
 		channelid = payload.channel_id
 		messageid = payload.message_id
 		emoji = payload.emoji
+		member = payload.user_id
 		reactchannel = self.bot.get_channel(channelid)
-		try:
-			message = await reactchannel.get_message(messageid)
-		except:
-			print(f'Message {messageid} not found')
+		message = reactchannel.get_message(messageid)
+                try:
+                        message = await reactchannel.get_message(messageid)
+                except:
+                        print(f'Message {messageid} not found')
 		reaction = None
 		for x in message.reactions:
 			if str(x.emoji) == '⭐':

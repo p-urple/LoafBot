@@ -139,7 +139,7 @@ class Events:
 	async def on_raw_reaction_add(self, payload):
 		if member == self.bot.user.id or message.author.bot == True:
 			return
-                c = con.cursor()
+		c = con.cursor()
 		channelid = payload.channel_id
 		messageid = payload.message_id
 		emoji = payload.emoji

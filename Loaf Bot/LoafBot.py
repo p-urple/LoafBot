@@ -51,7 +51,7 @@ class EmbedHelp(commands.HelpFormatter):
 			# last place sorting position.
 			return '**' + cog + ':' + '**' if cog is not None else '\u200b**No Category:**'
 
-		filtered = await self.filter_command_list()
+                filtered = await self.filter_command_list()
 		if self.is_bot():
 			data = sorted(filtered, key=category)
 			for category, cmds in itertools.groupby(data, key=category):

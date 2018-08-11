@@ -143,11 +143,13 @@ class Events:
 		emoji = payload.emoji
 		member = payload.user_id
 		reactchannel = self.bot.get_channel(channelid)
-		message = reactchannel.get_message(messageid)
-		if member == self.bot.user.id or message.author.bot == True:
-			return
 		try:
 			message = await reactchannel.get_message(messageid)
+			try:
+				if message.author.bot == True:
+					return
+			except:
+				pass
 		except:
 			print(f'Message {messageid} not found')
 		reaction = None

@@ -7,7 +7,7 @@ class Logging:
 	def __init__(self, bot):
 		self.bot = bot
 
-        
+
 	async def on_message_delete(self, message):
 		if message.author.bot is True:
 			return
@@ -22,21 +22,21 @@ class Logging:
 				return
 		except:
 			pass
-			
+
 		channel = message.channel.name
 
 		mc = 'Deleted Message in #' + str(channel) + ':'
 
 		em = discord.Embed(title=mc, description=message.content, colour=0xe74c3c)
 		em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
-		set_embed_image_to_message_image(em,message)	
+		set_embed_image_to_message_image(em,message)
 
 
 		await send_modlogs(self.bot, message.guild, embed = em)
 
 		con.commit()
 
-        
+
 	async def on_message_edit(self, message, after):
 		if message.author.bot or message.content == after.content:
 			return
@@ -61,10 +61,10 @@ class Logging:
 		try:
 			if self.bot.banned == user.id:
 				return
-		except:
+	        except:
 			pass
 		title = f'{user.name} ({user.id}) was banned'
-		message = f'{user.name} was banned without the use of {self.bot.display_name}'
+		message = f'{user.name} was banned without the use of {self.bot.user.display_name}'
 		em = discord.Embed(title=title, description=message, colour=0x00086b)
 		em.set_author(name=user.display_name, icon_url=user.avatar_url)
 		await send_modlogs(self.bot, ctx.guild, embed=em)

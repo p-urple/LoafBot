@@ -58,8 +58,11 @@ class Logging:
 		await send_modlogs(self.bot, message.guild, embed=em)
 
 	async def on_member_ban(self, guild, user):
-		if self.bot.banned == user.id:
-			return
+		try:
+			if self.bot.banned == user.id:
+				return
+		except:
+			pass
 		title = f'{user.name} ({user.id}) was banned'
 		message = f'{user.name} was banned without the use of {self.bot.display_name}'
 		em = discord.Embed(title=title, description=message, colour=0x00086b)

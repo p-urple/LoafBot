@@ -61,7 +61,7 @@ class Logging:
 		try:
 			if self.bot.banned == user.id:
 				return
-	        except:
+		except:
 			pass
 		title = f'{user.name} ({user.id}) was banned'
 		message = f'{user.name} was banned without the use of {self.bot.user.display_name}'

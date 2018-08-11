@@ -137,8 +137,6 @@ class Events:
 		con.commit()
 
 	async def on_raw_reaction_add(self, payload):
-		if member == self.bot.user.id or message.author.bot == True:
-			return
 		c = con.cursor()
 		channelid = payload.channel_id
 		messageid = payload.message_id
@@ -146,6 +144,8 @@ class Events:
 		member = payload.user_id
 		reactchannel = self.bot.get_channel(channelid)
 		message = reactchannel.get_message(messageid)
+		if member == self.bot.user.id or message.author.bot == True:
+			return
 		try:
 			message = await reactchannel.get_message(messageid)
 		except:

@@ -55,7 +55,23 @@ class Logging:
 		em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
 		set_embed_image_to_message_image(em, message)
 
-		await send_modlogs(self.bot, message.guild, embed = em)
-    
+		await send_modlogs(self.bot, message.guild, embed=em)
+
+	async def on_member_ban(self, guild, user):
+		if self.bot.banned == user.id:
+			return
+		title = f'{user.name} ({user.id}) was banned'
+		message = f'{user.name} was banned without the use of {self.bot.display_name}'
+		em = discord.Embed(title=title, description=message, colour=0x00086b)
+		em.set_author(name=user.display_name, icon_url=user.avatar_url)
+		await send_modlogs(self.bot, ctx.guild, embed=em)
+
+	async def on_member_unban(self, guild, user):
+		title = f'{user.name} ({user.id}) was unbanned'
+		message = f'{user.name} was removed from the ban list for {guild.name}'
+		em = discord.Embed(title=title, description=message, colour=0x5499c4)
+		em.set_author(name=user.display_name, icon_url=user.avatar_url)
+		await send_modlogs(self.bot, message.guild, embed=em)
+
 def setup(bot):
 	bot.add_cog(Logging(bot))

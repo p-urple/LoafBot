@@ -74,7 +74,7 @@ class Logging:
 		message = f'{user.name} was removed from the ban list for {guild.name}'
 		em = discord.Embed(title=title, description=message, colour=0x5499c4)
 		em.set_author(name=user.display_name, icon_url=user.avatar_url)
-		await send_modlogs(self.bot, message.guild, embed=em)
+		await send_modlogs(self.bot, ctx.guild, embed=em)
 
 def setup(bot):
 	bot.add_cog(Logging(bot))

@@ -152,6 +152,7 @@ class Events:
 				pass
 		except:
 			print(f'Message {messageid} not found')
+			await reactchannel.send("Hmm that's strange. It appears I can't find that message. Please make sure you have the `Read Message History` permission turned on for me.")
 			return
 		reaction = None
 		for x in message.reactions:

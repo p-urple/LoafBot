@@ -150,7 +150,7 @@ class Events:
 					return
 			except:
 				pass
-		except:
+		except Exception as e:
 			print(f'Message {messageid} not found')
 			return
 		reaction = None

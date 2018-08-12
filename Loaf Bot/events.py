@@ -32,7 +32,7 @@ class Events:
 
 		em = discord.Embed(title='Joined Server:', description=f'Server Count: **{counter}**', colour=0x51cc72)
 		em.set_author(name=guild.name, icon_url=guild.icon_url)
-	
+
 		servercount = self.bot.get_channel(461446497582579722)
 		await servercount.send(embed=em)
 
@@ -52,7 +52,7 @@ class Events:
 
 		em = discord.Embed(title='Left Server:', description=f'Server Count: **{counter}**', colour=0xe74c3c)
 		em.set_author(name=guild.name, icon_url=guild.icon_url)
-	
+
 		servercount = self.bot.get_channel(461446497582579722)
 		await servercount.send(embed=em)
 
@@ -63,17 +63,17 @@ class Events:
 		if member.bot == True:
 			return
 
-		try:												   
-			for i in c.execute('SELECT * FROM users WHERE uid=(?) AND gid=?', (uid, gid)):				     
-				addsuccess = []								      
-				addfail = []								      
+		try:
+			for i in c.execute('SELECT * FROM users WHERE uid=(?) AND gid=?', (uid, gid)):
+				addsuccess = []
+				addfail = []
 
-				role = discord.utils.get(member.guild.roles, id=i[2])			 
-				try:								      
+				role = discord.utils.get(member.guild.roles, id=i[2])
+				try:
 					await member.add_roles(role)
 					addsuccess.append(role.name)
 				except:
-					addfail.append(role.name)				      
+					addfail.append(role.name)
 			message = '**Successfully Restored:** \n'
 			for i in addsuccess:
 				message += i + '\n'
@@ -111,7 +111,7 @@ class Events:
 		c = con.cursor()
 		uid = member.id
 		gid = member.guild.id
-		roles = [role.id for role in member.roles] 
+		roles = [role.id for role in member.roles]
 		many = [(uid, gid, role) for role in roles]
 		try:
 			c.executemany("INSERT INTO users VALUES (?, ?, ?)", many)
@@ -152,6 +152,7 @@ class Events:
 				pass
 		except:
 			print(f'Message {messageid} not found')
+			return
 		reaction = None
 		for x in message.reactions:
 			if str(x.emoji) == '⭐':
@@ -166,7 +167,7 @@ class Events:
 				print(str(message.id))
 				em = discord.Embed(title=':ok_hand: Nice :ok_hand:', description=message.content, colour=0xbc52ec)
 				em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
-				set_embed_image_to_message_image(em,message)	
+				set_embed_image_to_message_image(em,message)
 				await send_starboard(self.bot, message.guild, embed = em)
 				c.execute("INSERT INTO starred VALUES (?, ?)", (message.guild.id, messageid))
 			con.commit()

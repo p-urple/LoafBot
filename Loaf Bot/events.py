@@ -150,7 +150,7 @@ class Events:
 					return
 			except:
 				pass
-		except:
+		except Exception as e:
 			print(f'Message {messageid} not found')
 			await reactchannel.send("Hmm that's strange. It appears I can't find that message. Please make sure you have the `Read Message History` permission turned on for me.")
 			return

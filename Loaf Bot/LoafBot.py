@@ -127,7 +127,7 @@ async def on_ready():
 	print('Logged in...')
 	print(discord.__version__)
 	print('-----')
-	
+
 	modlogchannel = bot.get_channel(437263769832259618)
 	lm = 'Logged in as: \n **'
 	lm += bot.user.display_name
@@ -146,8 +146,16 @@ async def on_ready():
 
 	await modlogchannel.send(embed=em)
 
-
-
+@bot.command(hidden=True)
+@command.is_owner()
+async def reboot(ctx):
+	"""reboots the bot"""
+	try:
+		await ctx.send('Bot is being rebooted')
+		await bot.clear()
+		await bot.connect(reconnect=True)
+	except:
+		await ctx.send('Reboot failed')
 
 @bot.command(name='load', hidden=True)
 @commands.is_owner()

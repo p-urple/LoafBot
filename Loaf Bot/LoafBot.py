@@ -147,7 +147,7 @@ async def on_ready():
 	await modlogchannel.send(embed=em)
 
 @bot.command(hidden=True)
-@command.is_owner()
+@commands.is_owner()
 async def reboot(ctx):
 	"""reboots the bot"""
 	try:

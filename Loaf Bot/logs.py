@@ -31,7 +31,7 @@ class Logging:
 		em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
 		embed_deleted_image(self.bot, em, message)
 
-		await send_modlogs(self.bot, message.guild, embed = em)
+		await send_modlogs(message.guild, embed = em)
 
 		con.commit()
 

@@ -66,7 +66,7 @@ class Utility:
 					wrap += 1
 				else:
 					em = discord.Embed(title = f'Roles for **{object}**:' , description = rolelist, colour = 0x4cff30)
-					em.set_author(name=convoker.display_name, icon_url=convoker.avatar_url)	
+					em.set_author(name=convoker.display_name, icon_url=convoker.avatar_url)
 					await ctx.send(embed=em)
 					wrap = 0
 
@@ -94,7 +94,7 @@ class Utility:
 					wrap += 1
 				else:
 					em = discord.Embed(title = f'Roles for **{object}**:' , description = rolelist, colour = 0x4cff30)
-					em.set_author(name=convoker.display_name, icon_url=convoker.avatar_url)	
+					em.set_author(name=convoker.display_name, icon_url=convoker.avatar_url)
 					await ctx.send(embed=em)
 					wrap = 0
 
@@ -112,7 +112,7 @@ class Utility:
 		rolelist += ' roles**'
 
 		em = discord.Embed(title = f'Roles for **{object}**:' , description = rolelist, colour = 0x4cff30)
-		em.set_author(name=convoker.display_name, icon_url=convoker.avatar_url)	
+		em.set_author(name=convoker.display_name, icon_url=convoker.avatar_url)
 		await ctx.send(embed=em)
 
 	@commands.command()
@@ -134,6 +134,11 @@ class Utility:
 	async def upvote(self, ctx):
 		"""sends the link to upvote the bot on discordbots.org"""
 		await ctx.send('Upvote the bot at https://discordbots.org/bot/430438798141423617')
+
+	@commands.command()
+	async def github(self, ctx):
+		"""send the link to the bot's gihub page"""
+		await ctx.send('https://github.com/Tyson-Chicken-Nuggets/LoafBot')
 
 def setup(bot):
     bot.add_cog(Utility(bot))

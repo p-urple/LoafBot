@@ -80,12 +80,30 @@ def get_field(guild, field):
 
 def set_embed_image_to_message_image(em, message):
 	try:
-		if message.content.startswith('https://'):
-			em.set_image(url=message.content)
+		if 'https://' in message.content:
+			words = message.content.split(' ', '')
+			for link in words:
+				if link.startswith('https://'):
+					em.set_image(url=link)
 	except:
 		pass
 	try:
 		attach = message.attachments
 		em.set_image(url = attach[0].url)
+	except:
+		pass
+
+def embed_deleted_image(em, message):
+	try:
+		if 'https://' in message.content:
+			words = message.content.split(' ', '')
+			for link in words:
+				if link.startswith('https://'):
+					em.set_image(url=link)
+	except:
+		pass
+	try:
+		if message.attachments != None:
+			em.set_footer(text='`image unavailable due to API limits`')
 	except:
 		pass

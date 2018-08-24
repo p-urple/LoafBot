@@ -64,9 +64,9 @@ class Events:
 			return
 
 		try:
+			addsuccess = []
+			addfail = []
 			for i in c.execute('SELECT * FROM users WHERE uid=(?) AND gid=?', (uid, gid)):
-				addsuccess = []
-				addfail = []
 
 				role = discord.utils.get(member.guild.roles, id=i[2])
 				try:
@@ -74,18 +74,21 @@ class Events:
 					addsuccess.append(role.name)
 				except:
 					addfail.append(role.name)
-			message = '**Successfully Restored:** \n'
-			for i in addsuccess:
-				message += i + '\n'
+			message = ''
+			if addsuccess != []:
+				message += '**Successfully Restored:** \n'
+				for i in addsuccess:
+					message += i + '\n'
 
-			message += '\n'
-			message += '**Unsuccessfully Restored:** \n'
-			for i in addfail:
-				message += i + '\n'
-			em2 = discord.Embed(title=None, description=message, color=0x23272a)
-			em2.set_author(name=member.display_name, icon_url=member.avatar_url)
-			c.execute('DELETE FROM users WHERE uid=? AND gid=?', (uid, gid))
-			returning = True
+			if addfail != []:
+				message += '\n'
+				message += '**Unsuccessfully Restored:** \n'
+				for i in addfail:
+					message += i + '\n'
+			if message != '':
+				returning = True
+			if message == '':
+				returning = False
 		except:
 			returning = False
 
@@ -103,6 +106,9 @@ class Events:
 
 		await send_modlogs(self.bot, member.guild, embed = em)
 		if returning:
+			em2 = discord.Embed(title=None, description=message, color=0x23272a)
+			em2.set_author(name=member.display_name, icon_url=member.avatar_url)
+			c.execute('DELETE FROM users WHERE uid=? AND gid=?', (uid, gid))
 			await send_modlogs(self.bot, member.guild, embed = em2)
 
 		con.commit()

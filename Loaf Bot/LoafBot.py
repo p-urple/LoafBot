@@ -146,16 +146,6 @@ async def on_ready():
 
 	await modlogchannel.send(embed=em)
 
-@bot.command(hidden=True)
-@commands.is_owner()
-async def reboot(ctx):
-	"""reboots the bot"""
-	try:
-		await ctx.send('Bot is being rebooted')
-		await bot.clear()
-		await bot.connect(reconnect=True)
-	except:
-		await ctx.send('Reboot failed')
 
 @bot.command(name='load', hidden=True)
 @commands.is_owner()

@@ -95,7 +95,7 @@ def set_embed_image_to_message_image(em, message):
 
 def embed_deleted_image(em, message):
 	try:
-		if 'https://' in message.content and message.embeds == []:
+		if 'https://' in message.content:
 			words = message.content.split(' ', '')
 			for link in words:
 				if link.startswith('https://'):

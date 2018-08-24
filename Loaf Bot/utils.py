@@ -104,6 +104,6 @@ def embed_deleted_image(em, message):
 		pass
 	try:
 		if message.attachments != None:
-			em.set_footer(text='`image unavailable due to API limits`')
+			em.set_footer(text='Image unavailable due to API limits')
 	except:
 		pass

@@ -29,8 +29,7 @@ class Logging:
 
 		em = discord.Embed(title=mc, description=message.content, colour=0xe74c3c)
 		em.set_author(name=message.author.display_name, icon_url=message.author.avatar_url)
-		embed_deleted_image(em,message)
-
+		embed_deleted_image(self.bot, em, message)
 
 		await send_modlogs(self.bot, message.guild, embed = em)
 

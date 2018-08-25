@@ -83,7 +83,7 @@ class Events:
 				message += '\n'
 				message += '**Unsuccessfully Restored:** \n'
 				for i in addfail:
-					if i = '@everyone':
+					if i == '@everyone':
 						pass
 					message += i + '\n'
 			if message != '':

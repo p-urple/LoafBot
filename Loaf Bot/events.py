@@ -67,7 +67,8 @@ class Events:
 			addsuccess = []
 			addfail = []
 			for i in c.execute('SELECT * FROM users WHERE uid=(?) AND gid=?', (uid, gid)):
-
+				if role.name == '@everyone':
+					pass
 				role = discord.utils.get(member.guild.roles, id=i[2])
 				try:
 					await member.add_roles(role)

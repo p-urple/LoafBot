@@ -36,15 +36,6 @@ class Events:
 		servercount = self.bot.get_channel(461446497582579722)
 		await servercount.send(embed=em)
 
-		sent = False
-		for channel in guild.channels:
-			while sent is False:
-				try:
-					await channel.send('Hi! The bot is designed for maximum customizability and therefore has a small (optional) setup in order to use all features.	 Use `>help` to get started.')
-					sent = True
-				except:
-					pass
-
 	async def on_guild_remove(self, guild):
 		counter = 0
 		for i in self.bot.guilds:

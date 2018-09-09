@@ -6,12 +6,14 @@ from utils import *
 
 class Moderation:
 	def __init__(self, bot):
-		self.bot = bot				
+		self.bot = bot
 
 	@commands.command()
 	@commands.has_permissions(kick_members=True)
 	async def kick(self, ctx, user : discord.Member, *, reason = None):
 		"""kicks the user"""
+		if ctx.message.author.bot:
+			return
 		if user.id == 430438798141423617 or user.id == 459174398889295882:
 			await ctx.send("Please don't hurt me...")
 			return
@@ -33,6 +35,8 @@ class Moderation:
 	@commands.has_permissions(kick_members=True)
 	async def softban(self, ctx, user : discord.Member, *, reason = None):
 		"""bans then unbans the user, deleting all their recent messges"""
+		if ctx.message.author.bot:
+			return
 		if user.id == 430438798141423617:
 			await ctx.send("Please don't hurt me...")
 			return
@@ -56,6 +60,8 @@ class Moderation:
 	@commands.has_permissions(ban_members=True)
 	async def ban(self, ctx, user : discord.Member, *, reason = None):
 		"""bans the user"""
+		if ctx.message.author.bot:
+			return
 		if user.id == 430438798141423617:
 			await ctx.send("Please don't hurt me...")
 			return
@@ -78,6 +84,8 @@ class Moderation:
 	@commands.has_permissions(manage_messages=True)
 	async def mute(self, ctx, user : discord.Member, time : int, denomination : str, *, reason : str = None):
 		"""mutes the user for the specified amount of time"""
+		if ctx.message.author.bot:
+			return
 		if denomination in ['s', 'm', 'h', 'd', 'second', 'minute', 'hour', 'day', 'seconds', 'minutes', 'hours', 'days']:
 			if denomination in ['second', 'seconds']:
 				denomination = 's'
@@ -126,6 +134,8 @@ class Moderation:
 	@commands.has_permissions(manage_messages=True)
 	async def unmute(self, ctx, user: discord.Member):
 		"""unmutes the specified muted user"""
+		if ctx.message.author.bot:
+			return
 		role = get_muterole(ctx.guild)
 		umention = user.mention
 		if role in user.roles:
@@ -139,6 +149,8 @@ class Moderation:
 	@commands.has_permissions(manage_messages=True)
 	async def purge(self, ctx, amount : int = None):
 		"""purges the specified amount of messages in the channel it is used"""
+		if ctx.message.author.bot:
+			return
 		if amount is None:
 			await ctx.send('Please give an amount')
 		elif amount == 1:

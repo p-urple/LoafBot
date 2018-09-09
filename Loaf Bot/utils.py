@@ -32,6 +32,7 @@ async def send_publiclogs(bot, guild, *args, **kwargs):
 	except:
 		pass
 
+
 async def send_starboard(bot, guild, *args, **kwargs):
 	try:
 		c = con.cursor()

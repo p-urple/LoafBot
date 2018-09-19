@@ -160,7 +160,7 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-	bot.process_commands(message)
+	await bot.process_commands(message)
 
 @bot.command(name='load', hidden=True)
 @commands.is_owner()

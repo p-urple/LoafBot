@@ -43,15 +43,6 @@ async def send_starboard(bot, guild, *args, **kwargs):
 	except:
 		pass
 
-def unmute_time(user, guild, time):
-	try:
-		c = con.cursor()
-		c.execute("INSERT INTO mutes VALUES (?, ?, ?)", (float(time), guild.id, user.id))
-	except:
-		c.execute('''CREATE TABLE mutes
-		             (time float, gid integer, uid integer)''')
-		c.execute("INSERT INTO mutes VALUES (?, ?, ?)", (float(time), guild.id, user.id))
-
 def timedelta_str(dt):
 	days = dt.days
 	hours, r = divmod(dt.seconds, 3600)
@@ -81,12 +72,6 @@ def get_muterole(guild):
 	c.execute("SELECT * FROM guilds WHERE guildid=?", (guild.id,))
 	row = c.fetchone()
 	return discord.utils.get(guild.roles, id=row['muterole'])
-
-async def unpunish(bot, guild, user):
-	role = get_muterole(guild)
-	if role not in user.roles:
-		await user.remove_roles(role)
-	await send_publiclogs(bot, guild, f'{user.mention} is no longer muted')
 
 def get_field(guild, field):
 	c = con.cursor()

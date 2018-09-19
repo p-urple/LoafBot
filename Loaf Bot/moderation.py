@@ -131,8 +131,10 @@ class Moderation:
 				await send_publiclogs(self.bot, ctx.guild, muted)
 				timedenoms = {'s':1, 'm':60, 'h':3600, 'd':86400}
 				t = time * timedenoms[denomination]
-				unmute = datetime.datetime.now().timestamp() + t
-				unmute_time(user, ctx.message.guild, time)
+				unmute = t
+				await asyncio.sleep(t)
+				if role in user.roles:
+					user.remove_roles(role)
 		else:
 			await ctx.send('Correct usage is: >mute <user> <time integer> <s/m/h/d> [reason]')
 

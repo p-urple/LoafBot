@@ -122,11 +122,23 @@ if __name__ == '__main__':
 		except Exception as e:
 			print(f'Failed to load extension {extension}.')
 			print(e)
+
+async def unpunish_loop():
+	while True:
+		try:
+			for i in c.execute("SELECT * FROM guilds"):
+				if i[0] <= float(datetime.datetime.now().timestamp()):
+					await unpunish(bot, i[1], i[2])
+		except:
+			pass
+
 @bot.event
 async def on_ready():
 	print('Logged in...')
 	print(discord.__version__)
 	print('-----')
+
+	asyncio.ensure_future(unpunish_loop())
 
 	modlogchannel = bot.get_channel(437263769832259618)
 	lm = 'Logged in as: \n **'

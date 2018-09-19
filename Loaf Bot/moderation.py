@@ -82,8 +82,16 @@ class Moderation:
 
 	@commands.command(pass_context=True)
 	@commands.has_permissions(manage_messages=True)
-	async def mute(self, ctx, user : discord.Member, time : int, denomination : str, *, reason : str = None):
+	async def mute(self, ctx, user : discord.Member, time : int = 0, denomination : str = '', *, reason : str = None):
 		"""mutes the user for the specified amount of time"""
+		if time == 0:
+			role = get_muterole(ctx.guild)
+			if role in user.roles:
+				await ctx.send(f'{user.mention} has already been muted')
+			else:
+				await user.add_roles(role)
+				await ctx.send(f'{user.mention} was muted')
+				await send_publiclogs(self.bot, ctx.guild, f'{user.mention} was muted')
 		if ctx.message.author.bot:
 			return
 		if denomination in ['s', 'm', 'h', 'd', 'second', 'minute', 'hour', 'day', 'seconds', 'minutes', 'hours', 'days']:
@@ -103,6 +111,7 @@ class Moderation:
 				await ctx.send(already)
 			else:
 				await user.add_roles(role)
+				unmute = datetime.timedelta()
 				umention = user.mention
 				if reason is None:
 					muted = umention
@@ -122,11 +131,8 @@ class Moderation:
 				await send_publiclogs(self.bot, ctx.guild, muted)
 				timedenoms = {'s':1, 'm':60, 'h':3600, 'd':86400}
 				t = time * timedenoms[denomination]
-				await asyncio.sleep(t)
-				if role in user.roles:
-					await user.remove_roles(role)
-					await send_publiclogs(self.bot, ctx.guild, f'{user.mention} is no longer muted.')
-
+				unmute = datetime.datetime.now().timestamp() + t
+				unmute_time(user, ctx.message.guild, time)
 		else:
 			await ctx.send('Correct usage is: >mute <user> <time integer> <s/m/h/d> [reason]')
 

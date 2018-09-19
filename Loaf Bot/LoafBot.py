@@ -138,8 +138,6 @@ async def on_ready():
 	print(discord.__version__)
 	print('-----')
 
-	asyncio.ensure_future(unpunish_loop())
-
 	modlogchannel = bot.get_channel(437263769832259618)
 	lm = 'Logged in as: \n **'
 	lm += bot.user.display_name
@@ -157,6 +155,8 @@ async def on_ready():
 	em.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
 
 	await modlogchannel.send(embed=em)
+
+	asyncio.ensure_future(unpunish_loop())
 
 
 @bot.command(name='load', hidden=True)

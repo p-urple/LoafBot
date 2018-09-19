@@ -158,6 +158,9 @@ async def on_ready():
 
 	asyncio.ensure_future(unpunish_loop())
 
+@bot.event
+async def on_message(message):
+	bot.process_commands(message)
 
 @bot.command(name='load', hidden=True)
 @commands.is_owner()

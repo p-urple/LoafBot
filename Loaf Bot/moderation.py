@@ -94,48 +94,47 @@ class Moderation:
 				await user.add_roles(role)
 				await ctx.send(f'{user.mention} was muted')
 				await send_publiclogs(self.bot, ctx.guild, f'{user.mention} was muted')
-		elif:
-			if denomination in ['s', 'm', 'h', 'd', 'second', 'minute', 'hour', 'day', 'seconds', 'minutes', 'hours', 'days']:
-				if denomination in ['second', 'seconds']:
-					denomination = 's'
-				if denomination in ['minute', 'minutes']:
-					denomination = 'm'
-				if denomination in ['hour', 'hours']:
-					denomination = 'h'
-				if denomination in ['day', 'days']:
-					denomination = 'd'
-				role = get_muterole(ctx.guild)
-				if role in user.roles:
-					umention = user.mention
-					already = umention
-					already += ' has already been muted'
-					await ctx.send(already)
+		elif denomination in ['s', 'm', 'h', 'd', 'second', 'minute', 'hour', 'day', 'seconds', 'minutes', 'hours', 'days']:
+			if denomination in ['second', 'seconds']:
+				denomination = 's'
+			if denomination in ['minute', 'minutes']:
+				denomination = 'm'
+			if denomination in ['hour', 'hours']:
+				denomination = 'h'
+			if denomination in ['day', 'days']:
+				denomination = 'd'
+			role = get_muterole(ctx.guild)
+			if role in user.roles:
+				umention = user.mention
+				already = umention
+				already += ' has already been muted'
+				await ctx.send(already)
+			else:
+				await user.add_roles(role)
+				unmute = datetime.timedelta()
+				umention = user.mention
+				if reason is None:
+					muted = umention
+					muted += ' was muted for '
+					muted += str(time)
+					muted += denomination
 				else:
-					await user.add_roles(role)
-					unmute = datetime.timedelta()
-					umention = user.mention
-					if reason is None:
-						muted = umention
-						muted += ' was muted for '
-						muted += str(time)
-						muted += denomination
-					else:
-						muted = umention
-						muted += ' was muted for '
-						muted += str(time)
-						muted += denomination
-						muted += ' (`'
-						muted += reason
-						muted += '`)'
+					muted = umention
+					muted += ' was muted for '
+					muted += str(time)
+					muted += denomination
+					muted += ' (`'
+					muted += reason
+					muted += '`)'
 
-					await ctx.send(muted)
-					await send_publiclogs(self.bot, ctx.guild, muted)
-					timedenoms = {'s':1, 'm':60, 'h':3600, 'd':86400}
-					t = time * timedenoms[denomination]
-					unmute = t
-					await asyncio.sleep(t)
-					if role in user.roles:
-						user.remove_roles(role)
+				await ctx.send(muted)
+				await send_publiclogs(self.bot, ctx.guild, muted)
+				timedenoms = {'s':1, 'm':60, 'h':3600, 'd':86400}
+				t = time * timedenoms[denomination]
+				unmute = t
+				await asyncio.sleep(t)
+				if role in user.roles:
+					user.remove_roles(role)
 		else:
 			await ctx.send('Correct usage is: >mute <user> <time integer> <s/m/h/d> [reason]')
 

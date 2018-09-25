@@ -59,6 +59,7 @@ class Events:
 			addfail = []
 			for i in c.execute('SELECT * FROM users WHERE uid=(?) AND gid=?', (uid, gid)):
 				role = discord.utils.get(member.guild.roles, id=i[2])
+				print(member.guild.roles[0].name)
 				if role == member.guild.roles[0]:
 					pass
 				try:

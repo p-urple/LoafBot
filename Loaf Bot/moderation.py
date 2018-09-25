@@ -84,6 +84,8 @@ class Moderation:
 	@commands.has_permissions(manage_messages=True)
 	async def mute(self, ctx, user : discord.Member, time : int = 0, denomination : str = '', *, reason : str = None):
 		"""mutes the user for the specified amount of time"""
+		if ctx.message.author.bot:
+			return
 		if time == 0:
 			role = get_muterole(ctx.guild)
 			if role in user.roles:
@@ -92,9 +94,7 @@ class Moderation:
 				await user.add_roles(role)
 				await ctx.send(f'{user.mention} was muted')
 				await send_publiclogs(self.bot, ctx.guild, f'{user.mention} was muted')
-		if ctx.message.author.bot:
-			return
-		if denomination in ['s', 'm', 'h', 'd', 'second', 'minute', 'hour', 'day', 'seconds', 'minutes', 'hours', 'days']:
+		elif denomination in ['s', 'm', 'h', 'd', 'second', 'minute', 'hour', 'day', 'seconds', 'minutes', 'hours', 'days']:
 			if denomination in ['second', 'seconds']:
 				denomination = 's'
 			if denomination in ['minute', 'minutes']:

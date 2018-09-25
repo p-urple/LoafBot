@@ -59,14 +59,14 @@ class Events:
 			addfail = []
 			for i in c.execute('SELECT * FROM users WHERE uid=(?) AND gid=?', (uid, gid)):
 				role = discord.utils.get(member.guild.roles, id=i[2])
-				print(member.guild.roles[0].name)
 				if role == member.guild.roles[0]:
-					pass
+					self.bot.role = role
 				try:
 					await member.add_roles(role)
 					addsuccess.append(role.name)
 				except:
-					addfail.append(role.name)
+					if role != self.bot.role:
+						addfail.append(role.name)
 			message = ''
 			if addsuccess != []:
 				message += '**Successfully Restored:** \n'

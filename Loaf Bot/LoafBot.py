@@ -123,6 +123,20 @@ if __name__ == '__main__':
 			print(f'Failed to load extension {extension}.')
 			print(e)
 
+
+async def unpunish_loop():
+	print('very running')
+	while True:
+		try:
+			for i in c.execute("SELECT * FROM mutes"):
+				print(i)
+				if i[0] <= float(datetime.datetime.now().timestamp()):
+					await unpunish(bot, i[0], i[1], i[2])
+		except Exception as e:
+			print(e)
+		await asyncio.sleep(1)
+	print('wtf why end')
+
 @bot.event
 async def on_ready():
 	print('Logged in...')
@@ -146,6 +160,8 @@ async def on_ready():
 	em.set_author(name=bot.user.name, icon_url=bot.user.avatar_url)
 
 	await modlogchannel.send(embed=em)
+
+	asyncio.ensure_future(unpunish_loop())
 
 @bot.event
 async def on_message(message):
